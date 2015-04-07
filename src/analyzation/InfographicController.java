@@ -46,6 +46,7 @@ public class InfographicController implements TrackerCallback {
 		
 		boolean showExtraPart = policy.showExtraPart(packet);
 		
+		gui.showExtraPart(indexOfPart);
 		if(packet.getPosition().x <= mainPartsWidth + 5 && indexOfPart != -1){ //only do something if you're on the main infographic
 			if(showExtraPart){
 				if(indexOfPart != Statics.extraPartId){ //only show part if it's not already shown
@@ -56,7 +57,7 @@ public class InfographicController implements TrackerCallback {
 			}
 			else{ //if we don't want to show something, then see if we want to hide the shown part
 				if(policy.hideExtraPart(packet, indexOfPart)){ 
-					gui.hideExtraPart();
+					gui.fadeOutExtraPart();
 				}
 			}
 		}

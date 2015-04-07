@@ -34,7 +34,7 @@ import analyzation.InfographicController;
 import brainwave.BrainwaveListenerCallback;
 import brainwave.ConnectionStatus;
 
-public class GUIController extends JFrame implements BrainwaveListenerCallback{
+public class GUIController extends JFrame implements BrainwaveListenerCallback, FadeOutCallback{
 	
 	private static final long serialVersionUID = 1L;
 	private Infographic infographic;
@@ -49,6 +49,9 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback{
 	private JTextPane session_info;
 	private Tracker tracker; //tracker that monitors the position in this GUI
 	private ConnectionStatus status;
+	private boolean waitForFadeOut;
+	private int fadeOutWaitIndex;
+	private int index = 1;
 	
 	public GUIController(Infographic infographic, Tracker tracker){
 		this.infographic = infographic;
@@ -156,18 +159,20 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback{
         start.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
-        		if(name.getText().equals(Statics.default_text_name_field) || name.getText().equals("")){
-        			JOptionPane.showMessageDialog(basic, "Please fill in your name first!", "Error", JOptionPane.ERROR_MESSAGE);
-        		}
-        		else if(status != ConnectionStatus.CONNECTED){
-        			JOptionPane.showMessageDialog(basic, "Please wait for the brainwave sensor status to be CONNECTED", "Error", JOptionPane.ERROR_MESSAGE);
-        		}
-        		else{
-        			Statics.reader_name = name.getText();
-        			Statics.SID = UUID.randomUUID().toString();
-        			Statics.reading = true;
-        			setSessionInfoText("Session started");
-        		}
+//        		if(name.getText().equals(Statics.default_text_name_field) || name.getText().equals("")){
+//        			JOptionPane.showMessageDialog(basic, "Please fill in your name first!", "Error", JOptionPane.ERROR_MESSAGE);
+//        		}
+//        		else if(status != ConnectionStatus.CONNECTED){
+//        			JOptionPane.showMessageDialog(basic, "Please wait for the brainwave sensor status to be CONNECTED", "Error", JOptionPane.ERROR_MESSAGE);
+//        		}
+//        		else{
+//        			Statics.reader_name = name.getText();
+//        			Statics.SID = UUID.randomUUID().toString();
+//        			Statics.reading = true;
+//        			setSessionInfoText("Session started");
+//        		}
+            	showExtraPart(index);
+            	index ++;
             }
         });
         return start;
@@ -179,10 +184,12 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback{
         stop.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
-                Statics.reading = false;
-                DatabaseManager.storeESenseDataInDB();
-    			setSessionInfoText("Session stopped");
-                hideExtraPart();
+
+            	fadeOutExtraPart();
+//                Statics.reading = false;
+//                DatabaseManager.storeESenseDataInDB();
+//    			setSessionInfoText("Session stopped");
+//                clearExtraParts();
             }
         });
         return stop;
@@ -236,7 +243,7 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback{
 		//show MainParts of infographic
 		for(MainPart part : infographic.getMainParts()){
 			BufferedImage bimg = part.getBimg();
-			GraphicPartComponent component = new GraphicPartComponent(bimg);
+			GraphicPartComponent component = new GraphicPartComponent(bimg, 1.0f, false, false, null);
 			component.setSizeTo(new Dimension(bimg.getWidth(),bimg.getHeight()));
 			mainParts.add(component);
 			
@@ -257,14 +264,54 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback{
 	 * 
 	 * @param pointerHeight
 	 */
-	public void showExtraPart(int index) {		
-		hideExtraPart();
+	public void showExtraPart(int index) {
+		if(Statics.extraPartId != -1){
+			waitForFadeOut = true;
+			fadeOutWaitIndex = index;
+			fadeOutExtraPart();
+		}
 		
+		else{
+			continueShowExtraPart(index);
+		}
+	}
+		
+	private void continueShowExtraPart(int index) {
+		boolean entered = drawExtraPartAtIndexWithGivenFading(index, 0.0f, true, false, null);
+		
+		//Update shown extraPartId
+		if(entered){
+			Statics.extraPartId = index;
+		}
+		else{
+			Statics.extraPartId = -1;
+		}	
+	}
+
+	public void fadeOutExtraPart() {
+		int index = Statics.extraPartId;
+		if(index == -1){
+			return;
+		}
+		Statics.extraPartId = -1;
+		
+		drawExtraPartAtIndexWithGivenFading(index, 1.0f, false, true, this);	
+	}
+
+	@Override
+	public void fadeOutFinished() {
+		if(waitForFadeOut){
+			continueShowExtraPart(fadeOutWaitIndex);
+		}
+		waitForFadeOut = false;
+	}	
+
+	private boolean drawExtraPartAtIndexWithGivenFading(int index, float alpha, boolean fadeIn, boolean fadeOut, FadeOutCallback callback) {
+		clearExtraParts();
 		Dimension d = new Dimension();
 		boolean entered = false;
 		
 		List<MainPart> graphParts = infographic.getMainParts();
-		extraParts.removeAll();
 		
 		for(int i = 0; i < graphParts.size(); i++){
 			MainPart part = graphParts.get(i);
@@ -272,7 +319,7 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback{
 			if(child != null && i == index){
 				entered = true;
 				BufferedImage bimg = child.getBimg();
-				GraphicPartComponent component = new GraphicPartComponent(bimg);
+				GraphicPartComponent component = new GraphicPartComponent(bimg, alpha, fadeIn, fadeOut, callback);
 				component.setMaximumSize(new Dimension(bimg.getWidth(),bimg.getHeight()));
 				component.setMinimumSize(new Dimension(bimg.getWidth(),bimg.getHeight()));
 				extraParts.add(Box.createRigidArea(d));
@@ -282,28 +329,15 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback{
 			else{
 				d.setSize(d.getWidth(),d.getHeight()+part.getBimg().getHeight());
 			}
-		}	
-		
-		//Update shown extraPartId
-		if(entered){
-			Statics.extraPartId = index;
 		}
-		else{
-			Statics.extraPartId = -1;
-		}	
-		
 		extraParts.add(Box.createRigidArea(d));
 		extraParts.revalidate();
 		extraParts.repaint();
+		
+		return entered;
 	}
 	
-	/**
-	 * Call when the currently shown extraPart should be hidden again
-	 * 
-	 * @param pointerHeight
-	 */
-	public void hideExtraPart() {	
-		Statics.extraPartId = -1;
+	public void clearExtraParts(){
 		extraParts.removeAll();
 		extraParts.revalidate();
 		extraParts.repaint();
@@ -367,5 +401,5 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback{
 
 	public List<Integer> getPartHeights() {
 		return partHeights;
-	}	
+	}
 }

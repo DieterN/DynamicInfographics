@@ -5,5 +5,6 @@
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/ConectorNeuroSky"/>
 	<classpathentry kind="lib" path="C:/Users/Dieter/Documents/K.U. Leuven/Master/2de master/Thesis/Jars/mongo-2.10.1.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Dieter/Documents/K.U. Leuven/Master/2de master/Thesis/Jars/jheatchart-0.6.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Dieter/Documents/K.U. Leuven/Master/2de master/Thesis/Jars/trident.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

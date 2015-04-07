@@ -4,8 +4,8 @@ import analyzation.PolicyType;
 
 public class Statics {
 	
-	public static final boolean showGUI = false;
-	public static final boolean extractData = true;
+	public static final boolean showGUI = true;
+	public static final boolean extractData = false;
 	
 	public static boolean reading = false; //true if someone is reading the infographic
 	public static String SID = "not_reading"; //unique SID identifying the current session
