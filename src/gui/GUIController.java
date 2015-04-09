@@ -439,21 +439,24 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback, 
 		highlightRectangle = new Rectangle(positionX, positionY, width, height);
 		
 		if(stroke < 3){
-			Graphics2D g2d = (Graphics2D) getGraphics();
-			g2d.setStroke(new BasicStroke(stroke));
-			g2d.draw(highlightRectangle);
+			drawHighlightRectangle();
 			stroke += 0.2f;
 		}
 		else{
-			stroke = 5.0f;
+			stroke = 3.0f;
 			highlightTimer.cancel();
 		}
 	}
 	
+	private void drawHighlightRectangle() {
+		Graphics2D g2d = (Graphics2D) getGraphics();
+		g2d.setStroke(new BasicStroke(stroke));
+		g2d.draw(highlightRectangle);
+	}
+
 	public void withdrawHighlight(int leftTopCornerX, int leftTopCornerY, int width, int height){
 		mainParts.removeAll();
 		paintGraphPanel();
-		stroke = 0.0f;
 		revalidate();
 	}
 	
