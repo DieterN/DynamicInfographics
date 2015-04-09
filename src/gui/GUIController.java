@@ -62,7 +62,6 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback, 
 	
 	private Timer highlightTimer = new Timer();
 	private float stroke = 0.5f;
-	private Rectangle highlightRectangle;
 	
 	public GUIController(Infographic infographic, Tracker tracker){
 		this.infographic = infographic;
@@ -212,12 +211,11 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback, 
             @Override
             public void actionPerformed(ActionEvent event) {
 
-            	fadeOutExtraPart();
-//            	highLightMainPart(100, 100, 50, 50);
-//                Statics.reading = false;
-//                DatabaseManager.storeESenseDataInDB();
-//    			setSessionInfoText("Session stopped");
-//                clearExtraParts();
+            	highLightMainPart(100, 100, 50, 50);
+                Statics.reading = false;
+                DatabaseManager.storeESenseDataInDB();
+    			setSessionInfoText("Session stopped");
+                clearExtraParts();
             }
         });
         return stop;
@@ -245,9 +243,7 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback, 
 	public void sendESenseMeasurement(ESenseData eSenseData) {
 		JScrollBar vertical = scroll.getVerticalScrollBar();
 		JScrollBar horizontal = scroll.getHorizontalScrollBar();
-//		System.out.println("Received packet: Att " + eSenseData.getAttentionValue() + " Med " + eSenseData.getMeditationValue());
 		if(Statics.reading){
-//			System.out.println("Sent packet to tracker: vertical " + vertical.getValue() + " horizontal " + horizontal.getValue());
 			tracker.sendESenseAndScrollData(eSenseData, horizontal.getValue(), vertical.getValue());
 		}
 		
@@ -266,7 +262,6 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback, 
 	public void paintGraphPanel() {
 		//Parameters used to make the program function well
 		int extraWidth = 0;
-//		int partHeight = 0;
 		
 		//show MainParts of infographic
 		for(MainPart part : infographic.getMainParts()){
@@ -274,9 +269,6 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback, 
 			GraphicPartComponent component = new GraphicPartComponent(bimg, 1.0f, false, false, null);
 			component.setSizeTo(new Dimension(bimg.getWidth(),bimg.getHeight()));
 			mainParts.add(component);
-			
-//			partHeight += bimg.getHeight();
-//			partHeights.add(partHeight);
 			
 			ExtraPart widestChild = part.getWidestChild();
 			
@@ -286,7 +278,6 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback, 
 			}
 		}
 		//Set extrapart size according to mainpart size and width of extra parts
-//		extraParts.setSizeTo(new Dimension(extraWidth,partHeights.get(partHeights.size()-1)));
 		extraParts.setSizeTo(new Dimension(extraWidth,infographic.getInfographicHeight()));
 	}
 
@@ -308,29 +299,6 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback, 
 			continueShowExtraPart(id);
 		}
 	}
-//	public void showExtraPart(int index) {
-//		if(Statics.extraPartId != -1){
-//			waitForFadeOut = true;
-//			fadeOutWaitIndex = index;
-//			fadeOutExtraPart();
-//		}
-//		
-//		else{
-//			continueShowExtraPart(index);
-//		}
-//	}
-		
-//	public void showExtraPart(int index) {
-//		if(Statics.extraPartId != -1){
-//			waitForFadeOut = true;
-//			fadeOutWaitIndex = index;
-//			fadeOutExtraPart();
-//		}
-//		
-//		else{
-//			continueShowExtraPart(index);
-//		}
-//	}
 	
 	private void continueShowExtraPart(UUID id) {
 		boolean entered = drawExtraPartWithIDAndWithGivenFading(id, 0.0f, true, false, null);
@@ -385,7 +353,7 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback, 
 				highLightMainPart(mainPart.getTopLeftCornerX(), mainPart.getTopLeftCornerY(), mainPart.getImageWidth(), mainPart.getImageHeight());
 			}
 			else if(fadeOut){
-				withdrawHighlight(mainPart.getTopLeftCornerX(), mainPart.getTopLeftCornerY(), mainPart.getImageWidth(), mainPart.getImageHeight());
+				withdrawHighlight();
 			}
 		}
 		else{
@@ -397,25 +365,6 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback, 
 		extraParts.repaint();
 		
 		return childExists;
-//		List<MainPart> graphParts = infographic.getMainParts();
-		
-//		for(int i = 0; i < graphParts.size(); i++){
-//			MainPart part = graphParts.get(i);
-//			ExtraPart child = part.getChild();
-//			if(child != null && i == index){
-//				entered = true;
-//				BufferedImage bimg = child.getBimg();
-//				GraphicPartComponent component = new GraphicPartComponent(bimg, alpha, fadeIn, fadeOut, callback);
-//				component.setMaximumSize(new Dimension(bimg.getWidth(),bimg.getHeight()));
-//				component.setMinimumSize(new Dimension(bimg.getWidth(),bimg.getHeight()));
-//				extraParts.add(Box.createRigidArea(d));
-//				extraParts.add(component);
-//				d = new Dimension();
-//			}
-//			else{
-//				d.setSize(d.getWidth(),d.getHeight()+part.getBimg().getHeight());
-//			}
-//		}
 	}
 	
 	public void highLightMainPart(final int leftTopCornerX, final int leftTopCornerY, final int width, final int height){
@@ -436,10 +385,12 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback, 
 		int positionX = leftTopCornerX + Statics.frameOffsetX - horizontal.getValue();
 		int positionY = leftTopCornerY + Statics.frameOffsetY - vertical.getValue();
 		
-		highlightRectangle = new Rectangle(positionX, positionY, width, height);
+		Rectangle highlightRectangle = new Rectangle(positionX, positionY, width, height);
 		
 		if(stroke < 3){
-			drawHighlightRectangle();
+			Graphics2D g2d = (Graphics2D) getGraphics();
+			g2d.setStroke(new BasicStroke(stroke));
+			g2d.draw(highlightRectangle);
 			stroke += 0.2f;
 		}
 		else{
@@ -448,16 +399,10 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback, 
 		}
 	}
 	
-	private void drawHighlightRectangle() {
-		Graphics2D g2d = (Graphics2D) getGraphics();
-		g2d.setStroke(new BasicStroke(stroke));
-		g2d.draw(highlightRectangle);
-	}
-
-	public void withdrawHighlight(int leftTopCornerX, int leftTopCornerY, int width, int height){
+	public void withdrawHighlight(){
 		mainParts.removeAll();
 		paintGraphPanel();
-		revalidate();
+		stroke = 0.5f;
 	}
 	
 	public void clearExtraParts(){
