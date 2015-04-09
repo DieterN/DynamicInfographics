@@ -1,25 +1,50 @@
 package infographic;
 
 import java.awt.image.BufferedImage;
+import java.util.Map;
+import java.util.UUID;
 
-public class MainPart extends GraphicPart{
+public abstract class MainPart extends GraphicPart{
 
-	private ExtraPart child;
+	protected int topLeftCornerX; //absolute coordinates -> kader breedte/hoogte moeten al afgetrokken zijn
+	protected int topLeftCornerY;
+	protected UUID id;
 	
-	public MainPart(BufferedImage bimg, ExtraPart child){
+	public MainPart(BufferedImage bimg, int topLeftCornerX, int topLeftCornerY) {
 		super(bimg);
-		this.child = child;
+		this.topLeftCornerX = topLeftCornerX;
+		this.topLeftCornerY = topLeftCornerY;
+		this.id = UUID.randomUUID();
 	}
 	
-	public MainPart(BufferedImage bimg){
-		super(bimg);
+	public int getTopLeftCornerX() {
+		return topLeftCornerX;
 	}
 
-	public ExtraPart getChild() {
-		return child;
+	public void setTopLeftCornerX(int topLeftCornerX) {
+		this.topLeftCornerX = topLeftCornerX;
 	}
 
-	public void setChild(ExtraPart child) {
-		this.child = child;
-	}	
+	public int getTopLeftCornerY() {
+		return topLeftCornerY;
+	}
+
+	public void setTopLeftCornerY(int topLeftCornerY) {
+		this.topLeftCornerY = topLeftCornerY;
+	}
+
+	public UUID getId() {
+		return id;
+	}
+
+	public abstract ExtraPart getChildOfPartAt(int width);
+	
+	public abstract ExtraPart getHighestChild();
+	
+	public abstract ExtraPart getWidestChild();
+
+	public abstract UUID getIdOfMainPartAt(double width);
+
+	public abstract Map<UUID, MainPart> getMapWithSelfAndChildren();
+	
 }

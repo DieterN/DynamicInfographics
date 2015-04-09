@@ -57,10 +57,11 @@ public class DatabaseManager implements TrackerCallback{
 		java.util.Date date = new java.util.Date();
 		Timestamp timestamp = new Timestamp(date.getTime());
 		
+		//TODO: partId + andere esense data?
 		BasicDBObject measurement = new BasicDBObject("timestamp", timestamp)
         .append("ESenseData", new BasicDBObject("attention", packet.getAttentionValue()).append("meditation", packet.getMeditationValue()))
         .append("Position", new BasicDBObject("xPos", packet.getPosition().x).append("yPos", packet.getPosition().y))
-        .append("ExtraPartId", Statics.extraPartId);
+        .append("ExtraPartId", Statics.partId);
 		
 		measurements.add(measurement);
 	}

@@ -1,5 +1,7 @@
 package main;
 
+import java.util.UUID;
+
 import analyzation.PolicyType;
 
 public class Statics {
@@ -15,19 +17,19 @@ public class Statics {
 	public static final String default_text_name_field = "Fill in your name";
 	public static String reader_name = "";	
 
-	public static final String inputFolder = "infographic_drought"; //this should also be the name of the infographic
-	public static final int nbTimesOutExtraParts = 5;
-	public static final int nbOfTimesMeasuredInMainPart = 5; 
-	
-//	public static final String inputFolder = "infographic_eyes"; //this should also be the name of the infographic
+//	public static final String inputFolder = "infographic_drought"; //this should also be the name of the infographic
 //	public static final int nbTimesOutExtraParts = 5;
 //	public static final int nbOfTimesMeasuredInMainPart = 5; 
+	
+	public static final String inputFolder = "infographic_eyes"; //this should also be the name of the infographic
+	public static final int nbTimesOutExtraParts = 5;
+	public static final int nbOfTimesMeasuredInMainPart = 5; 
 	
 //	public static final String inputFolder = "infographic_space"; //this should also be the name of the infographic
 //	public static final int nbTimesOutExtraParts = 5;
 //	public static final int nbOfTimesMeasuredInMainPart = 15; 
 	
-	public static int extraPartId = -1; //no part shown -> id is id of main part that owns the shown extra part
+	public static UUID partId = null; //no part shown -> null otherwise id is id of main part that owns the shown extra part
 	
 	public static final double alpha = 0.4; //gives weight to new measurements
 	

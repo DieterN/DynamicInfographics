@@ -2,19 +2,26 @@ package gui;
 
 import infographic.ExtraPart;
 import infographic.Infographic;
+import infographic.LeafMainPart;
 import infographic.MainPart;
 
+import java.awt.BasicStroke;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
+import java.awt.Stroke;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -44,14 +51,18 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback, 
 	private UnscalablePanel control;
 	private JPanel mainParts;
 	private UnscalablePanel extraParts;
-	private List<Integer> partHeights = new ArrayList<Integer>();
+//	private List<Integer> partHeights = new ArrayList<Integer>();
 	private JTextPane connectionStatusText;
 	private JTextPane session_info;
 	private Tracker tracker; //tracker that monitors the position in this GUI
 	private ConnectionStatus status;
 	private boolean waitForFadeOut;
-	private int fadeOutWaitIndex;
+	private UUID fadeOutWaitId;
 	private int index = 1;
+	
+	private Timer highlightTimer = new Timer();
+	private float stroke = 0.5f;
+	private Rectangle highlightRectangle;
 	
 	public GUIController(Infographic infographic, Tracker tracker){
 		this.infographic = infographic;
@@ -171,9 +182,25 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback, 
 //        			Statics.reading = true;
 //        			setSessionInfoText("Session started");
 //        		}
-            	showExtraPart(index);
+            	UUID extraId = testMethodGetMainPart();
+            	showExtraPart(extraId);
             	index ++;
             }
+
+			private UUID testMethodGetMainPart() {
+				int localIndex = 0;
+				for(MainPart part : infographic.getMappedMainParts().values()){
+					if(part instanceof LeafMainPart){
+						if(localIndex == index){
+							return part.getId();
+						}
+						else{
+							localIndex++;
+						}
+					}
+				}
+				return null;
+			}
         });
         return start;
 	}
@@ -186,6 +213,7 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback, 
             public void actionPerformed(ActionEvent event) {
 
             	fadeOutExtraPart();
+//            	highLightMainPart(100, 100, 50, 50);
 //                Statics.reading = false;
 //                DatabaseManager.storeESenseDataInDB();
 //    			setSessionInfoText("Session stopped");
@@ -238,7 +266,7 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback, 
 	public void paintGraphPanel() {
 		//Parameters used to make the program function well
 		int extraWidth = 0;
-		int partHeight = 0;
+//		int partHeight = 0;
 		
 		//show MainParts of infographic
 		for(MainPart part : infographic.getMainParts()){
@@ -247,16 +275,19 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback, 
 			component.setSizeTo(new Dimension(bimg.getWidth(),bimg.getHeight()));
 			mainParts.add(component);
 			
-			partHeight += bimg.getHeight();
-			partHeights.add(partHeight);
+//			partHeight += bimg.getHeight();
+//			partHeights.add(partHeight);
 			
-			if(part.getChild() != null){
-				BufferedImage bimg2 = part.getChild().getBimg();
+			ExtraPart widestChild = part.getWidestChild();
+			
+			if(widestChild != null){
+				BufferedImage bimg2 = widestChild.getBimg();
 				extraWidth = Math.max(extraWidth, bimg2.getWidth());
 			}
 		}
 		//Set extrapart size according to mainpart size and width of extra parts
-		extraParts.setSizeTo(new Dimension(extraWidth,partHeights.get(partHeights.size()-1)));
+//		extraParts.setSizeTo(new Dimension(extraWidth,partHeights.get(partHeights.size()-1)));
+		extraParts.setSizeTo(new Dimension(extraWidth,infographic.getInfographicHeight()));
 	}
 
 	/**
@@ -264,77 +295,166 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback, 
 	 * 
 	 * @param pointerHeight
 	 */
-	public void showExtraPart(int index) {
-		if(Statics.extraPartId != -1){
-			waitForFadeOut = true;
-			fadeOutWaitIndex = index;
+	public void showExtraPart(UUID id) {
+		if(Statics.partId != null){
+			if(id != null){
+				waitForFadeOut = true;
+				fadeOutWaitId = id;
+			}
 			fadeOutExtraPart();
 		}
 		
-		else{
-			continueShowExtraPart(index);
+		else if(id != null){
+			continueShowExtraPart(id);
 		}
 	}
+//	public void showExtraPart(int index) {
+//		if(Statics.extraPartId != -1){
+//			waitForFadeOut = true;
+//			fadeOutWaitIndex = index;
+//			fadeOutExtraPart();
+//		}
+//		
+//		else{
+//			continueShowExtraPart(index);
+//		}
+//	}
 		
-	private void continueShowExtraPart(int index) {
-		boolean entered = drawExtraPartAtIndexWithGivenFading(index, 0.0f, true, false, null);
+//	public void showExtraPart(int index) {
+//		if(Statics.extraPartId != -1){
+//			waitForFadeOut = true;
+//			fadeOutWaitIndex = index;
+//			fadeOutExtraPart();
+//		}
+//		
+//		else{
+//			continueShowExtraPart(index);
+//		}
+//	}
+	
+	private void continueShowExtraPart(UUID id) {
+		boolean entered = drawExtraPartWithIDAndWithGivenFading(id, 0.0f, true, false, null);
 		
 		//Update shown extraPartId
 		if(entered){
-			Statics.extraPartId = index;
+			Statics.partId = id;
 		}
 		else{
-			Statics.extraPartId = -1;
+			Statics.partId = null;
 		}	
 	}
 
 	public void fadeOutExtraPart() {
-		int index = Statics.extraPartId;
-		if(index == -1){
+		UUID id = Statics.partId;
+		if(id == null){
 			return;
 		}
-		Statics.extraPartId = -1;
+		Statics.partId = null;
 		
-		drawExtraPartAtIndexWithGivenFading(index, 1.0f, false, true, this);	
+		drawExtraPartWithIDAndWithGivenFading(id, 1.0f, false, true, this);	
 	}
 
 	@Override
 	public void fadeOutFinished() {
 		if(waitForFadeOut){
-			continueShowExtraPart(fadeOutWaitIndex);
+			continueShowExtraPart(fadeOutWaitId);
 		}
 		waitForFadeOut = false;
 	}	
 
-	private boolean drawExtraPartAtIndexWithGivenFading(int index, float alpha, boolean fadeIn, boolean fadeOut, FadeOutCallback callback) {
+	private boolean drawExtraPartWithIDAndWithGivenFading(UUID id, float alpha, boolean fadeIn, boolean fadeOut, FadeOutCallback callback) {
 		clearExtraParts();
 		Dimension d = new Dimension();
-		boolean entered = false;
+		boolean childExists = false;
+		LeafMainPart mainPart = (LeafMainPart) infographic.getMainPartWithId(id);
+		int y = mainPart.getTopLeftCornerY();
+		ExtraPart child = mainPart.getChild(); //MainPart should be leaf
 		
-		List<MainPart> graphParts = infographic.getMainParts();
-		
-		for(int i = 0; i < graphParts.size(); i++){
-			MainPart part = graphParts.get(i);
-			ExtraPart child = part.getChild();
-			if(child != null && i == index){
-				entered = true;
-				BufferedImage bimg = child.getBimg();
-				GraphicPartComponent component = new GraphicPartComponent(bimg, alpha, fadeIn, fadeOut, callback);
-				component.setMaximumSize(new Dimension(bimg.getWidth(),bimg.getHeight()));
-				component.setMinimumSize(new Dimension(bimg.getWidth(),bimg.getHeight()));
-				extraParts.add(Box.createRigidArea(d));
-				extraParts.add(component);
-				d = new Dimension();
+		if(child != null){
+			d.setSize(d.getWidth(), y);
+			childExists = true;
+			BufferedImage bimg = child.getBimg();
+			GraphicPartComponent component = new GraphicPartComponent(bimg, alpha, fadeIn, fadeOut, callback);
+			component.setMaximumSize(new Dimension(bimg.getWidth(),bimg.getHeight()));
+			component.setMinimumSize(new Dimension(bimg.getWidth(),bimg.getHeight()));
+			extraParts.add(Box.createRigidArea(d));
+			extraParts.add(component);
+			d = new Dimension();
+			d.setSize(d.getWidth(),infographic.getInfographicHeight() - (y+bimg.getHeight()));
+			if(fadeIn){
+				highLightMainPart(mainPart.getTopLeftCornerX(), mainPart.getTopLeftCornerY(), mainPart.getImageWidth(), mainPart.getImageHeight());
 			}
-			else{
-				d.setSize(d.getWidth(),d.getHeight()+part.getBimg().getHeight());
+			else if(fadeOut){
+				withdrawHighlight(mainPart.getTopLeftCornerX(), mainPart.getTopLeftCornerY(), mainPart.getImageWidth(), mainPart.getImageHeight());
 			}
 		}
+		else{
+			d.setSize(d.getWidth(),infographic.getInfographicHeight());
+		}
+		
 		extraParts.add(Box.createRigidArea(d));
 		extraParts.revalidate();
 		extraParts.repaint();
 		
-		return entered;
+		return childExists;
+//		List<MainPart> graphParts = infographic.getMainParts();
+		
+//		for(int i = 0; i < graphParts.size(); i++){
+//			MainPart part = graphParts.get(i);
+//			ExtraPart child = part.getChild();
+//			if(child != null && i == index){
+//				entered = true;
+//				BufferedImage bimg = child.getBimg();
+//				GraphicPartComponent component = new GraphicPartComponent(bimg, alpha, fadeIn, fadeOut, callback);
+//				component.setMaximumSize(new Dimension(bimg.getWidth(),bimg.getHeight()));
+//				component.setMinimumSize(new Dimension(bimg.getWidth(),bimg.getHeight()));
+//				extraParts.add(Box.createRigidArea(d));
+//				extraParts.add(component);
+//				d = new Dimension();
+//			}
+//			else{
+//				d.setSize(d.getWidth(),d.getHeight()+part.getBimg().getHeight());
+//			}
+//		}
+	}
+	
+	public void highLightMainPart(final int leftTopCornerX, final int leftTopCornerY, final int width, final int height){
+		highlightTimer = new Timer();
+		highlightTimer.scheduleAtFixedRate(new TimerTask() {
+			
+			@Override
+			public void run() {
+				drawRectangle(leftTopCornerX, leftTopCornerY, width, height);
+			}
+		}, 0, 100);
+	}
+	
+	private void drawRectangle(int leftTopCornerX, int leftTopCornerY, int width, int height){
+		JScrollBar vertical = scroll.getVerticalScrollBar();
+		JScrollBar horizontal = scroll.getHorizontalScrollBar();
+
+		int positionX = leftTopCornerX + Statics.frameOffsetX - horizontal.getValue();
+		int positionY = leftTopCornerY + Statics.frameOffsetY - vertical.getValue();
+		
+		highlightRectangle = new Rectangle(positionX, positionY, width, height);
+		
+		if(stroke < 3){
+			Graphics2D g2d = (Graphics2D) getGraphics();
+			g2d.setStroke(new BasicStroke(stroke));
+			g2d.draw(highlightRectangle);
+			stroke += 0.2f;
+		}
+		else{
+			stroke = 5.0f;
+			highlightTimer.cancel();
+		}
+	}
+	
+	public void withdrawHighlight(int leftTopCornerX, int leftTopCornerY, int width, int height){
+		mainParts.removeAll();
+		paintGraphPanel();
+		stroke = 0.0f;
+		revalidate();
 	}
 	
 	public void clearExtraParts(){
@@ -343,24 +463,8 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback, 
 		extraParts.repaint();
 	}
 
-	/**
-	 * Return index i if partHeights[i]<pointerHeight<partHeights[i+1]
-	 * 
-	 * @param pointerHeight
-	 * @return
-	 */
-	public int getIndexOfPart(double pointerHeight) {
-		int index = -1;
-		for(int i = 0; i<partHeights.size(); i++){
-			if(pointerHeight <= partHeights.get(i)){
-				index = i;
-				break;
-			}
-		}
-//		if(index == -1){
-//			throw new IllegalArgumentException("Given pointerheight isn't valid -- getIndexOfPart");
-//		}
-		return index;
+	public UUID getPartID(double width, double height){
+		return infographic.getIDofPartAt(width, height);
 	}
 	
 	/***********************
@@ -397,9 +501,5 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback, 
 
 	public UnscalablePanel getExtraParts() {
 		return extraParts;
-	}
-
-	public List<Integer> getPartHeights() {
-		return partHeights;
 	}
 }

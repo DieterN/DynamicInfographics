@@ -1,20 +1,22 @@
 package infographic;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
-import javax.imageio.ImageIO;
+import java.util.Map;
+import java.util.UUID;
 
 public class Infographic {
 
-	private List<MainPart> mainParts;
-	private List<ExtraPart> extraParts;
+	private List<MainPart> mainParts = new ArrayList<MainPart>();
+	private Map<UUID,MainPart> mappedMainParts = new HashMap<UUID,MainPart>();
 	
-	public Infographic(List<MainPart> mainParts, List<ExtraPart> extraParts){
+	public Infographic(List<MainPart> mainParts){
 		this.mainParts = mainParts;
-		this.extraParts = extraParts;
+		for(MainPart part: mainParts){
+			mappedMainParts.putAll(part.getMapWithSelfAndChildren());
+		}
 	}
 
 	public List<MainPart> getMainParts() {
@@ -25,12 +27,12 @@ public class Infographic {
 		this.mainParts = mainParts;
 	}
 
-	public List<ExtraPart> getExtraParts() {
-		return extraParts;
+	public Map<UUID, MainPart> getMappedMainParts() {
+		return mappedMainParts;
 	}
-
-	public void setExtraParts(List<ExtraPart> extraParts) {
-		this.extraParts = extraParts;
+	
+	public MainPart getMainPartWithId(UUID id){
+		return mappedMainParts.get(id);
 	}
 
 	public int getInfographicImageType(){
@@ -60,12 +62,34 @@ public class Infographic {
 
 	}
 
-	private int getInfographicHeight() {
-		int height = 0;
-		for(MainPart part: mainParts){
-			height += part.getImageHeight();
+	public int getInfographicHeight() {
+		MainPart lastPart = mainParts.get(mainParts.size()-1);
+		int height = lastPart.getTopLeftCornerY();
+		ExtraPart extraPart = lastPart.getHighestChild();
+		if(extraPart != null){
+			height +=  Math.max(lastPart.getImageHeight(), lastPart.getHighestChild().getImageHeight()); 
+		}
+		else{
+			height += lastPart.getImageHeight();
 		}
 		return height;
+//		int height = 0;
+//		for(MainPart part: mainParts){
+//			height += part.getImageHeight();
+//		}
+//		return height;
+	}
+	
+	public UUID getIDofPartAt(double width, double height){
+		UUID id = null;
+		for(MainPart part: mainParts){
+			int topLeftCornerY = part.getTopLeftCornerY();
+			if(topLeftCornerY <= height && ((topLeftCornerY + part.getImageHeight()) > height)){
+				id = part.getIdOfMainPartAt(width);
+				break; //(return previous part ID)
+			}
+		}
+		return id;
 	}
 	
 }

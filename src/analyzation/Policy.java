@@ -1,12 +1,14 @@
 package analyzation;
 
+import java.util.UUID;
+
 import main.Statics;
 import dataTypes.ESensePacket;
 
 public abstract class Policy {
 		
 	private int outOfPartHeightCounter = 0;
-	private int counterPartId = -1;
+	private UUID counterPartId = null;
 	
 	public abstract boolean showExtraPart(ESensePacket packet);
 
@@ -18,11 +20,11 @@ public abstract class Policy {
 	 * @param indexOfPart
 	 * @return
 	 */
-	public boolean hideExtraPart(ESensePacket packet, int indexOfPart){
+	public boolean hideExtraPart(ESensePacket packet, UUID id){
 		boolean result = false;
 		
-		if(Statics.extraPartId != -1 && Statics.extraPartId != indexOfPart){ //only act if something is shown and if we're not on the same height as the shown part
-			if(counterPartId == indexOfPart){ //if the current counter fits the currently shown part
+		if(Statics.partId != null && Statics.partId != id){ //only act if something is shown and if we're not on the same height as the shown part
+			if(counterPartId == Statics.partId){ //if the current counter fits the currently shown part
 				outOfPartHeightCounter++;
 				if(outOfPartHeightCounter >= Statics.nbTimesOutExtraParts){
 					result = true;
@@ -31,7 +33,7 @@ public abstract class Policy {
 			}
 			else{ //reset counter
 				outOfPartHeightCounter = 1;
-				counterPartId = indexOfPart;
+				counterPartId = Statics.partId;
 			}
 		}
 		return result;

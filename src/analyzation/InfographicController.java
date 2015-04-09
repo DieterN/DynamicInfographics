@@ -1,7 +1,9 @@
 package analyzation;
 
+import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import main.Statics;
 import gui.GUIController;
@@ -18,7 +20,7 @@ public class InfographicController implements TrackerCallback {
 
 	private GUIController gui;
 	private Policy policy;
-	private Map<Integer,Integer> highMeasureMap = new HashMap<Integer,Integer>();
+	private Map<UUID,Integer> highMeasureMap = new HashMap<UUID,Integer>();
 
 	public InfographicController(GUIController gui) {
 		this.gui = gui;
@@ -41,48 +43,63 @@ public class InfographicController implements TrackerCallback {
 
 	@Override
 	public void sendESensePacket(ESensePacket packet) {		
-		int indexOfPart = gui.getIndexOfPart(packet.getPosition().y);
+		Point point = packet.getPosition();
+		UUID id = gui.getPartID(point.x, point.y);
 		int mainPartsWidth = gui.getMainParts().getSize().width;
 		
 		boolean showExtraPart = policy.showExtraPart(packet);
 		
-		gui.showExtraPart(indexOfPart);
-		if(packet.getPosition().x <= mainPartsWidth + 5 && indexOfPart != -1){ //only do something if you're on the main infographic
+		if(id != null){ //only do something if you're on the main infographic
 			if(showExtraPart){
-				if(indexOfPart != Statics.extraPartId){ //only show part if it's not already shown
-					if(showPartAtIndex(indexOfPart)){ //if enough show messages, show part
-						gui.showExtraPart(indexOfPart);
+				if(id != Statics.partId){ //only show part if it's not already shown
+					if(showPartWithUUID(id)){ //if enough show messages, show part
+						gui.showExtraPart(id);
 					}
 				}
 			}
 			else{ //if we don't want to show something, then see if we want to hide the shown part
-				if(policy.hideExtraPart(packet, indexOfPart)){ 
+				if(policy.hideExtraPart(packet, id)){ 
 					gui.fadeOutExtraPart();
 				}
 			}
 		}
+		
+//		if(packet.getPosition().x <= mainPartsWidth + 5 && idOfPart != null){ //only do something if you're on the main infographic
+//			if(showExtraPart){
+//				if(idOfPart != Statics.extraPartId){ //only show part if it's not already shown
+//					if(showPartAtIndex(idOfPart)){ //if enough show messages, show part
+//						gui.showExtraPart(indexOfPart);
+//					}
+//				}
+//			}
+//			else{ //if we don't want to show something, then see if we want to hide the shown part
+//				if(policy.hideExtraPart(packet, indexOfPart)){ 
+//					gui.fadeOutExtraPart();
+//				}
+//			}
+//		}
 	}
 
-	private boolean showPartAtIndex(int index) {
+	private boolean showPartWithUUID(UUID id) {
 		boolean result = false;
 		
-		int count = getCountForIndex(index);
+		int count = getCountForId(id);
 		int newCount = count + 1;
 		if(newCount >= Statics.nbOfTimesMeasuredInMainPart){
 			result = true;
-			highMeasureMap.put(index, 0); //extra part will be shown, reset counter
+			highMeasureMap.put(id, 0); //extra part will be shown, reset counter
 		}
 		else{
-			highMeasureMap.put(index, newCount);
+			highMeasureMap.put(id, newCount);
 		}
 		return result;
 	}
 
-	private int getCountForIndex(int index) {
-		if(!highMeasureMap.keySet().contains(index)){
-			highMeasureMap.put(index, 0);
+	private int getCountForId(UUID id) {
+		if(!highMeasureMap.keySet().contains(id)){
+			highMeasureMap.put(id, 0);
 		}
-		return highMeasureMap.get(index);
+		return highMeasureMap.get(id);
 	}
 
 	public GUIController getGui() {
