@@ -32,14 +32,14 @@ public class GraphicPartComponent extends UnscalableComponent{
 		this.alpha = alpha;
 		this.fadeIn = fadeIn;
 		this.fadeOut = fadeOut;
-		this.fadeInTimer = new javax.swing.Timer(100, new ActionListener() {
+		this.fadeInTimer = new Timer(100, new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				fadeIn();
 			}
 		});
-		this.fadeOutTimer = new javax.swing.Timer(100, new ActionListener() {
+		this.fadeOutTimer = new Timer(100, new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {

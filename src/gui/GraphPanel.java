@@ -11,14 +11,17 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 
 import main.Statics;
 
@@ -37,6 +40,8 @@ public class GraphPanel extends UnscalablePanel implements FadeOutCallback{
 	private UUID fadeOutWaitId;
 
 	private Rectangle highlightRectangle;
+
+	private Timer highlightTimer;
 	
 	public GraphPanel(Infographic infographic) {
 		this.infographic = infographic; 
@@ -159,12 +164,7 @@ public class GraphPanel extends UnscalablePanel implements FadeOutCallback{
 			extraParts.add(component);
 			d = new Dimension();
 			d.setSize(d.getWidth(),infographic.getInfographicHeight() - (y+bimg.getHeight()));
-			if(fadeIn){
-				highLightMainPart(mainPart.getTopLeftCornerX(), mainPart.getTopLeftCornerY(), mainPart.getImageWidth(), mainPart.getImageHeight());
-			}
-			else if(fadeOut){
-				withdrawHighlight();
-			}
+			highlight(mainPart, fadeIn, fadeOut);
 		}
 		else{
 			d.setSize(d.getWidth(),infographic.getInfographicHeight());
@@ -178,34 +178,37 @@ public class GraphPanel extends UnscalablePanel implements FadeOutCallback{
 	}
 	
 	
-	public void highLightMainPart(final int leftTopCornerX, final int leftTopCornerY, final int width, final int height){
-		final Timer timer = new Timer();
-		timer.scheduleAtFixedRate(new TimerTask() {
-			
-			@Override
-			public void run() {
-				drawRectangle(timer, leftTopCornerX, leftTopCornerY, width-4, height);
-			}
-		}, 0, 100);
-	}
-	
-	private void drawRectangle(Timer timer, int leftTopCornerX, int leftTopCornerY, int width, int height){
-		int positionX = leftTopCornerX;
-		int positionY = leftTopCornerY;
-		
-		highlightRectangle = new Rectangle(positionX, positionY, width, height);
-		
-		if(stroke < 3){
-			drawRectangle();
-			stroke += 0.2f;
+	private void highlight(LeafMainPart mainPart, boolean fadeIn, boolean fadeOut) {
+		if(fadeIn){
+			highLightMainPart(mainPart.getTopLeftCornerX(), mainPart.getTopLeftCornerY(), mainPart.getImageWidth(), mainPart.getImageHeight());
 		}
-		else{
-			stroke = 3.0f;
-//			highlightRectangle = null;
-			timer.cancel();
+		else if(fadeOut){
+			withdrawHighlight();
 		}
+		
 	}
 
+	public void highLightMainPart(int leftTopCornerX, int leftTopCornerY, int width, int height){
+		withdrawHighlight();
+		highlightRectangle = new Rectangle(leftTopCornerX, leftTopCornerY, width, height);
+		
+		highlightTimer = new Timer(100, new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(stroke < 3){
+					drawRectangle();
+					stroke += 0.2f;
+				}
+				else{
+					stroke = 3.0f;
+					highlightTimer.stop();
+				}
+			}
+		});
+		highlightTimer.start();
+	}
+	
 	private void drawRectangle() {
 		if(highlightRectangle != null){
 			Graphics2D g2d = (Graphics2D) getGraphics();
