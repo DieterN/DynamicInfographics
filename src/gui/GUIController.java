@@ -1,5 +1,6 @@
 package gui;
 
+import infographic.CompositeMainPart;
 import infographic.ExtraPart;
 import infographic.Infographic;
 import infographic.LeafMainPart;
@@ -16,9 +17,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.TreeSet;
 import java.util.UUID;
 
 import javax.swing.BorderFactory;
@@ -51,7 +55,8 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback, 
 	private UnscalablePanel control;
 	private JPanel mainParts;
 	private UnscalablePanel extraParts;
-//	private List<Integer> partHeights = new ArrayList<Integer>();
+	private UnscalablePanel buttonPanel;
+	
 	private JTextPane connectionStatusText;
 	private JTextPane session_info;
 	private Tracker tracker; //tracker that monitors the position in this GUI
@@ -71,6 +76,7 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback, 
 		this.control = new UnscalablePanel();
 		this.mainParts = new JPanel();
 		this.extraParts = new UnscalablePanel();
+		this.buttonPanel = new UnscalablePanel();
 		this.connectionStatusText = new JTextPane();
 		this.session_info = new JTextPane();
 		
@@ -107,15 +113,21 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback, 
 		mainParts.setAlignmentY(TOP_ALIGNMENT);
 		mainParts.setLayout(new BoxLayout(mainParts, BoxLayout.Y_AXIS));
 		
+		//Make column for the button panel
+		buttonPanel.setAlignmentY(TOP_ALIGNMENT);
+		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
+		
 		//Make column for the extra parts
 		extraParts.setAlignmentY(TOP_ALIGNMENT);
 		extraParts.setLayout(new BoxLayout(extraParts, BoxLayout.Y_AXIS));
 
 		//Add main and extra part panels to the graphPanel
 		graphPanel.add(mainParts);
+		graphPanel.add(buttonPanel);
 		graphPanel.add(extraParts);
 		
 		paintGraphPanel();
+		paintButtonPanel();
 		paintControlPanel();
 		
         //Set frame size to size of screen and make it visible
@@ -250,6 +262,74 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback, 
 		setConnectionStatusText(eSenseData.getStatus(), eSenseData.getAttentionValue(), eSenseData.getMeditationValue());
 	}
 	
+	/*******************
+	 *** BUTTON PANEL ***
+	 *******************/
+	
+	private Map<UUID,JButton> buttonmap = new HashMap<UUID,JButton>();
+	private final int buttonHeight = 25;
+	private final int buttonWidth = 200;
+
+	/**
+	 * Call this method to draw the button panel
+	 */
+	public void paintButtonPanel() {
+		
+		buttonPanel.setSizeTo(new Dimension(buttonWidth, infographic.getInfographicHeight()));
+		//Loop over LeafMainParts to draw invisible buttons (they're in a treeset, so they should be ordened)
+		for(MainPart part : infographic.getMainParts()){
+			if(part instanceof CompositeMainPart){
+				createCompositeButtonPanel((CompositeMainPart) part);
+			}
+			else{
+				createLeafButtonPanel((LeafMainPart) part);
+			}
+		}
+	}
+
+	private void createCompositeButtonPanel(CompositeMainPart part) {
+		TreeSet<MainPart> subParts = part.getSubParts();
+		int height = part.getImageHeight();
+		int nbOfParts = subParts.size();
+		int heightWithoutButtons = height - nbOfParts*buttonHeight;
+		Dimension d = new Dimension(0,heightWithoutButtons/(nbOfParts+1));
+		
+		for(MainPart leaf: subParts){
+			buttonPanel.add(Box.createRigidArea(d));
+			createExtraButton((LeafMainPart) leaf);
+		}
+		buttonPanel.add(Box.createRigidArea(d));
+	}
+
+	private void createLeafButtonPanel(LeafMainPart part) {		
+		int height = part.getImageHeight();
+		Dimension d = new Dimension(0,(height - buttonHeight)/2);
+		
+		buttonPanel.add(Box.createRigidArea(d));
+		createExtraButton(part);
+		buttonPanel.add(Box.createRigidArea(d));
+	}
+
+	private void createExtraButton(LeafMainPart leaf) {
+		final UUID id = leaf.getId();
+		if(leaf.getChild() != null){
+			UnscalableButton extraButton = new UnscalableButton("Review extra part");
+			extraButton.setSizeTo(new Dimension(buttonWidth,buttonHeight));
+			extraButton.setVisible(true);
+			buttonmap.put(id, extraButton);
+			buttonPanel.add(extraButton);
+			extraButton.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					showExtraPart(id);
+				}
+			});
+		}
+		else{
+			buttonPanel.add(Box.createRigidArea(new Dimension(0, buttonHeight)));
+		}
+	}
 
 	/*******************
 	 *** GRAPH PANEL ***
@@ -287,16 +367,18 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback, 
 	 * @param pointerHeight
 	 */
 	public void showExtraPart(UUID id) {
-		if(Statics.partId != null){
-			if(id != null){
-				waitForFadeOut = true;
-				fadeOutWaitId = id;
+		if(Statics.partId != id){
+			if(Statics.partId != null){
+				if(id != null){
+					waitForFadeOut = true;
+					fadeOutWaitId = id;
+				}
+				fadeOutExtraPart();
 			}
-			fadeOutExtraPart();
-		}
-		
-		else if(id != null){
-			continueShowExtraPart(id);
+			
+			else if(id != null){
+				continueShowExtraPart(id);
+			}
 		}
 	}
 	
@@ -367,18 +449,19 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback, 
 		return childExists;
 	}
 	
+	
 	public void highLightMainPart(final int leftTopCornerX, final int leftTopCornerY, final int width, final int height){
-		highlightTimer = new Timer();
-		highlightTimer.scheduleAtFixedRate(new TimerTask() {
+		final Timer timer = new Timer();
+		timer.scheduleAtFixedRate(new TimerTask() {
 			
 			@Override
 			public void run() {
-				drawRectangle(leftTopCornerX, leftTopCornerY, width, height);
+				drawRectangle(timer, leftTopCornerX, leftTopCornerY, width-4, height);
 			}
 		}, 0, 100);
 	}
 	
-	private void drawRectangle(int leftTopCornerX, int leftTopCornerY, int width, int height){
+	private void drawRectangle(Timer timer, int leftTopCornerX, int leftTopCornerY, int width, int height){
 		JScrollBar vertical = scroll.getVerticalScrollBar();
 		JScrollBar horizontal = scroll.getHorizontalScrollBar();
 
@@ -395,7 +478,7 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback, 
 		}
 		else{
 			stroke = 3.0f;
-			highlightTimer.cancel();
+			timer.cancel();
 		}
 	}
 	

@@ -5,21 +5,23 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.UUID;
 
 public class CompositeMainPart extends MainPart{
 
-	private List<MainPart> subParts = new ArrayList<MainPart>();
+	private TreeSet<MainPart> subParts = new TreeSet<MainPart>();
 	
 	public CompositeMainPart(BufferedImage bimg, int topLeftCornerX, int topLeftCornerY) {
 		super(bimg, topLeftCornerX, topLeftCornerY);
 	}
 
-	public List<MainPart> getSubParts() {
+	public TreeSet<MainPart> getSubParts() {
 		return subParts;
 	}
 
-	public void setSubParts(List<MainPart> subParts) {
+	public void setSubParts(TreeSet<MainPart> subParts) {
 		this.subParts = subParts;
 	}
 

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeSet;
 import java.util.UUID;
 
 public class Infographic {
@@ -37,6 +38,16 @@ public class Infographic {
 
 	public int getInfographicImageType(){
 		return mainParts.get(0).getType();
+	}
+	
+	public TreeSet<LeafMainPart> getAllLeafs(){
+		TreeSet<LeafMainPart> result = new TreeSet<LeafMainPart>();
+		for(MainPart part: mappedMainParts.values()){
+			if(part instanceof LeafMainPart){
+				result.add((LeafMainPart) part);
+			}
+		}
+		return result;
 	}
 	
 	public BufferedImage getImage() {

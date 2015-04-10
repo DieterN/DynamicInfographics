@@ -4,7 +4,7 @@ import java.awt.image.BufferedImage;
 import java.util.Map;
 import java.util.UUID;
 
-public abstract class MainPart extends GraphicPart{
+public abstract class MainPart extends GraphicPart implements Comparable<MainPart>{
 
 	protected int topLeftCornerX; //absolute coordinates -> kader breedte/hoogte moeten al afgetrokken zijn
 	protected int topLeftCornerY;
@@ -35,6 +35,20 @@ public abstract class MainPart extends GraphicPart{
 
 	public UUID getId() {
 		return id;
+	}
+	
+	@Override
+	public int compareTo(MainPart part){
+		int answer = 0;
+		if(this.topLeftCornerY < part.getTopLeftCornerY())
+			answer = -1;
+		else if(this.topLeftCornerY > part.getTopLeftCornerY())
+			answer = 1;
+		else if(this.topLeftCornerX < part.getTopLeftCornerX())
+			answer = -1;
+		else if(this.topLeftCornerX > part.getTopLeftCornerX())
+			answer = 1;
+		return answer;
 	}
 
 	public abstract ExtraPart getChildOfPartAt(int width);

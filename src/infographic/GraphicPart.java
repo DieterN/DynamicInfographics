@@ -2,7 +2,7 @@ package infographic;
 
 import java.awt.image.BufferedImage;
 
-public abstract class GraphicPart {
+public abstract class GraphicPart{
 
 	private BufferedImage bimg; //link to image of this part
 	
