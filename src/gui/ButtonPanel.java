@@ -87,7 +87,6 @@ public class ButtonPanel extends UnscalablePanel{
 		if(leaf.getChild() != null && visibleButtonList.contains(id)){
 			UnscalableButton extraButton = new UnscalableButton("Review extra part");
 			extraButton.setSizeTo(new Dimension(buttonWidth,buttonHeight));
-			System.out.println("Enter");
 			extraButton.setVisible(true);
 //			buttonmap.put(id, extraButton);
 			add(extraButton);
@@ -95,6 +94,7 @@ public class ButtonPanel extends UnscalablePanel{
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
+					graphPanel.resetHighlightRectangle();
 					graphPanel.showExtraPart(id);
 				}
 			});

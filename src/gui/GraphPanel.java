@@ -229,4 +229,8 @@ public class GraphPanel extends UnscalablePanel implements FadeOutCallback{
 		return this.mainParts;
 	}
 	
+	public void resetHighlightRectangle(){
+		this.highlightRectangle = null;
+	}
+	
 }
