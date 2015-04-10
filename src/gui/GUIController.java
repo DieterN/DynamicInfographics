@@ -52,20 +52,17 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback, 
 	private JPanel basic;
 	private JPanel graphPanel;
 	private JScrollPane scroll;
-	private UnscalablePanel control;
+	private ControlPanel control;
 	private JPanel mainParts;
 	private UnscalablePanel extraParts;
 	private UnscalablePanel buttonPanel;
 	
-	private JTextPane connectionStatusText;
-	private JTextPane session_info;
 	private Tracker tracker; //tracker that monitors the position in this GUI
-	private ConnectionStatus status;
+	
 	private boolean waitForFadeOut;
 	private UUID fadeOutWaitId;
 	private int index = 1;
 	
-	private Timer highlightTimer = new Timer();
 	private float stroke = 0.5f;
 	
 	public GUIController(Infographic infographic, Tracker tracker){
@@ -73,19 +70,15 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback, 
 		this.basic = new JPanel();
 		this.graphPanel = new JPanel();
 		this.scroll = new JScrollPane(graphPanel);
-		this.control = new UnscalablePanel();
+		this.control = new ControlPanel(this);
 		this.mainParts = new JPanel();
 		this.extraParts = new UnscalablePanel();
 		this.buttonPanel = new UnscalablePanel();
-		this.connectionStatusText = new JTextPane();
-		this.session_info = new JTextPane();
 		
 		InfographicController controller = new InfographicController(this);
 		
 		this.tracker = tracker;
 		tracker.addCallback(controller);
-		
-		status = ConnectionStatus.NOT_CONNECTED;
 	}	
 		
 	/**
@@ -94,8 +87,7 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback, 
 	public void startGUI(){
 		if(this.isVisible()){
 			throw new IllegalStateException("This method should only be called at the start of the program");
-		}
-		
+		}		
 		//Add right panes to basic layout and add basic to frame
 		basic.setLayout(new BoxLayout(basic, BoxLayout.X_AXIS));
 		basic.add(scroll);
@@ -128,127 +120,11 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback, 
 		
 		paintGraphPanel();
 		paintButtonPanel();
-		paintControlPanel();
 		
         //Set frame size to size of screen and make it visible
 		Rectangle rectangle = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
 		setSize(rectangle.getSize());
-		setVisible(true);		
-	}
-
-	/********************
-	 *** CONTROL PANE ***
-	 ********************/
-	
-	/**
-	 * Initialize the panel with all information needed for the program to work
-	 */
-	private void paintControlPanel() {
-		control.setLayout(new BoxLayout(control,BoxLayout.Y_AXIS));
-		control.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JTextField name = new JTextField(Statics.default_text_name_field);
-        
-		JButton start = makeStartButton(name);
-        JButton stop  = makeStopButton();
-        
-        setConnectionStatusText(ConnectionStatus.NOT_CONNECTED,0,0);
-        connectionStatusText.setEditable(false);
-        
-        setSessionInfoText("Not started");
-        session_info.setEditable(false);
- 
-		control.add(Box.createRigidArea(new Dimension(0,10)));
-		control.add(start);
-		control.add(Box.createRigidArea(new Dimension(0,10)));
-		control.add(stop);
-		control.add(Box.createRigidArea(new Dimension(0,20)));
-		control.add(name);
-		control.add(Box.createRigidArea(new Dimension(0,20)));
-		control.add(session_info);
-		control.add(Box.createRigidArea(new Dimension(0,20)));
-		control.add(connectionStatusText);
-		control.add(Box.createRigidArea(new Dimension(0,770)));
-        Rectangle rectangle = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
-		control.setSizeTo(new Dimension(200,(int) rectangle.getHeight()));
-		
-		control.revalidate();
-	}
-
-	private JButton makeStartButton(final JTextField name) {
-		JButton start = new JButton("Start session");
-		
-        start.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent event) {
-//        		if(name.getText().equals(Statics.default_text_name_field) || name.getText().equals("")){
-//        			JOptionPane.showMessageDialog(basic, "Please fill in your name first!", "Error", JOptionPane.ERROR_MESSAGE);
-//        		}
-//        		else if(status != ConnectionStatus.CONNECTED){
-//        			JOptionPane.showMessageDialog(basic, "Please wait for the brainwave sensor status to be CONNECTED", "Error", JOptionPane.ERROR_MESSAGE);
-//        		}
-//        		else{
-//        			Statics.reader_name = name.getText();
-//        			Statics.SID = UUID.randomUUID().toString();
-//        			Statics.reading = true;
-//        			setSessionInfoText("Session started");
-//        		}
-            	UUID extraId = testMethodGetMainPart();
-            	showExtraPart(extraId);
-            	index ++;
-            }
-
-			private UUID testMethodGetMainPart() {
-				int localIndex = 0;
-				for(MainPart part : infographic.getMappedMainParts().values()){
-					if(part instanceof LeafMainPart){
-						if(localIndex == index){
-							return part.getId();
-						}
-						else{
-							localIndex++;
-						}
-					}
-				}
-				return null;
-			}
-        });
-        return start;
-	}
-	
-	private JButton makeStopButton() {
-		JButton stop = new JButton("Stop session ");
-
-        stop.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent event) {
-
-            	highLightMainPart(100, 100, 50, 50);
-                Statics.reading = false;
-                DatabaseManager.storeESenseDataInDB();
-    			setSessionInfoText("Session stopped");
-                clearExtraParts();
-            }
-        });
-        return stop;
-	}
-
-	private void setSessionInfoText(String info) {
-        session_info.setText(info);
-        session_info.revalidate();
-	}
-
-	private void setConnectionStatusText(ConnectionStatus status, int attention, int meditation) {
-		this.status = status;
-		
-		String text = ConnectionStatus.toString(status);
-		text += "\n \n Attention: ";
-		text += attention;
-		text += "\n \n Meditation: ";
-		text += meditation;
-
-        connectionStatusText.setText(text);
-		connectionStatusText.revalidate();
+		setVisible(true);	
 	}
 	
 	@Override
@@ -259,7 +135,7 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback, 
 			tracker.sendESenseAndScrollData(eSenseData, horizontal.getValue(), vertical.getValue());
 		}
 		
-		setConnectionStatusText(eSenseData.getStatus(), eSenseData.getAttentionValue(), eSenseData.getMeditationValue());
+		control.setConnectionStatusText(eSenseData.getStatus(), eSenseData.getAttentionValue(), eSenseData.getMeditationValue());
 	}
 	
 	/*******************
