@@ -1,5 +1,7 @@
 package analyzation;
 
+import infographic.Infographic;
+
 import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,11 +21,13 @@ import tracking.TrackerCallback;
 public class InfographicController implements TrackerCallback {
 
 	private GUIController gui;
+	private Infographic infographic;
 	private Policy policy;
 	private Map<UUID,Integer> highMeasureMap = new HashMap<UUID,Integer>();
 
-	public InfographicController(GUIController gui) {
+	public InfographicController(GUIController gui, Infographic infographic) {
 		this.gui = gui;
+		this.infographic = infographic;
 		setRightPolicy();
 	}
 	
@@ -44,8 +48,8 @@ public class InfographicController implements TrackerCallback {
 	@Override
 	public void sendESensePacket(ESensePacket packet) {		
 		Point point = packet.getPosition();
-		UUID id = gui.getPartID(point.x, point.y);
-		int mainPartsWidth = gui.getMainParts().getSize().width;
+		UUID id = infographic.getIDofPartAt(point.x, point.y);
+//		int mainPartsWidth = gui.getMainParts().getSize().width;
 		
 		boolean showExtraPart = policy.showExtraPart(packet);
 		
