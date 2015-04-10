@@ -1,19 +1,14 @@
 package mongodb;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
-
-import org.bson.types.BasicBSONList;
 
 import main.Statics;
 
 import com.mongodb.AggregationOutput;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
+import com.mongodb.DBCollection;s
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 

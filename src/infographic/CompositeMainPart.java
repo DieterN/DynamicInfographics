@@ -1,11 +1,8 @@
 package infographic;
 
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeSet;
 import java.util.UUID;
 
@@ -49,10 +46,12 @@ public class CompositeMainPart extends MainPart{
 		
 		for(MainPart subPart: subParts){
 			ExtraPart child = subPart.getWidestChild();
-			int childWidth = child.getImageWidth();
-			if(childWidth > width){
-				widestChild = child;
-				width = childWidth;
+			if(child != null){
+				int childWidth = child.getImageWidth();
+				if(childWidth > width){
+					widestChild = child;
+					width = childWidth;
+				}
 			}
 		}
 		return widestChild;

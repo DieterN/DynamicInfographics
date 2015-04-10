@@ -2,7 +2,6 @@ package tracking;
 
 import java.awt.MouseInfo;
 import java.awt.Point;
-import java.awt.PointerInfo;
 import java.util.List;
 
 /**
