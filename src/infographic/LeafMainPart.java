@@ -55,6 +55,11 @@ public class LeafMainPart extends MainPart{
 		map.put(id, this);
 		return map;
 	}
+
+	@Override
+	public void accept(MainPartVisitor visitor) {
+		visitor.visit(this);
+	}
 	
 
 }

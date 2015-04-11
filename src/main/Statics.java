@@ -13,7 +13,7 @@ public class Statics {
 	
 	public static boolean reading = false; //true if someone is reading the infographic
 	public static String SID = "not_reading"; //unique SID identifying the current session
-	public static final int frameOffsetX = 10; //thickness of the frame border, used to calculate mouse position (PositionX = MouseValue - frameOffsetX + Horscrollbar.value())
+	public static final int frameOffsetX = 0; //thickness of the frame border, used to calculate mouse position (PositionX = MouseValue - frameOffsetX + Horscrollbar.value())
 	public static final int frameOffsetY = 40; //thickness of the frame border, used to calculate mouse position (PositionY = MouseValue - frameOffsetY + Verscrollbar.value())
 
 	public static final String default_text_name_field = "Fill in your name";

@@ -61,4 +61,5 @@ public abstract class MainPart extends GraphicPart implements Comparable<MainPar
 
 	public abstract Map<UUID, MainPart> getMapWithSelfAndChildren();
 	
+	public abstract void accept(MainPartVisitor visitor);
 }

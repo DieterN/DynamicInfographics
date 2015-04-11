@@ -2,7 +2,6 @@ package gui;
 
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -34,12 +33,10 @@ public class ControlPanel extends UnscalablePanel{
 		this.connectionStatusText = new JTextPane();
 		this.session_info = new JTextPane();
 		this.status = ConnectionStatus.NOT_CONNECTED;
+		initializeControlPanel();
 	}
-	
-	@Override
-	public void paint(Graphics g) {
-		super.paint(g);
-		removeAll();
+
+	private void initializeControlPanel() {
 		setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
 		setAlignmentX(Component.CENTER_ALIGNMENT);
 

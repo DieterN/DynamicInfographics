@@ -4,8 +4,11 @@ import infographic.CompositeMainPart;
 import infographic.Infographic;
 import infographic.LeafMainPart;
 import infographic.MainPart;
+import infographic.MainPartVisitor;
 
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -15,8 +18,9 @@ import java.util.UUID;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.UIManager;
 
-public class ButtonPanel extends UnscalablePanel{
+public class ButtonPanel extends UnscalablePanel implements MainPartVisitor{
 
 	private static final long serialVersionUID = 1L;
 	
@@ -49,12 +53,7 @@ public class ButtonPanel extends UnscalablePanel{
 		setSizeTo(new Dimension(buttonWidth, infographic.getInfographicHeight()));
 		//Loop over LeafMainParts to draw invisible buttons (they're in a treeset, so they should be ordened)
 		for(MainPart part : infographic.getMainParts()){
-			if(part instanceof CompositeMainPart){
-				createCompositeButtonPanel((CompositeMainPart) part);
-			}
-			else{
-				createLeafButtonPanel((LeafMainPart) part);
-			}
+			part.accept(this);
 		}
 		revalidate();
 	}
@@ -82,13 +81,12 @@ public class ButtonPanel extends UnscalablePanel{
 		add(Box.createRigidArea(d));
 	}
 
-	private void createExtraButton(LeafMainPart leaf) {
+	private void createExtraButton(final LeafMainPart leaf) {
 		final UUID id = leaf.getId();
 		if(leaf.getChild() != null && visibleButtonList.contains(id)){
-			UnscalableButton extraButton = new UnscalableButton("Review extra part");
+			final UnscalableButton extraButton = new UnscalableButton("Review extra part");
 			extraButton.setSizeTo(new Dimension(buttonWidth,buttonHeight));
 			extraButton.setVisible(true);
-//			buttonmap.put(id, extraButton);
 			add(extraButton);
 			extraButton.addActionListener(new ActionListener() {
 				
@@ -97,6 +95,16 @@ public class ButtonPanel extends UnscalablePanel{
 					graphPanel.resetHighlightRectangle();
 					graphPanel.showExtraPart(id);
 				}
+			});
+			extraButton.addMouseListener(new java.awt.event.MouseAdapter() {
+			    public void mouseEntered(java.awt.event.MouseEvent evt) {
+			    	Rectangle rectangle = new Rectangle(leaf.getTopLeftCornerX(), leaf.getTopLeftCornerY(), leaf.getImageWidth(), leaf.getImageHeight());
+//			    	graphPanel.setMouseOverRectangle(rectangle);
+			    }
+
+			    public void mouseExited(java.awt.event.MouseEvent evt) {
+//			    	graphPanel.resetMouseOverRectangle();
+			    }
 			});
 		}
 		else{
@@ -108,6 +116,16 @@ public class ButtonPanel extends UnscalablePanel{
 		visibleButtonList.add(id);
 		drawButtonPanel();
 		repaint();
+	}
+
+	@Override
+	public void visit(LeafMainPart part) {
+		createLeafButtonPanel(part);
+	}
+
+	@Override
+	public void visit(CompositeMainPart part) {
+		createCompositeButtonPanel(part);
 	}
 	
 }

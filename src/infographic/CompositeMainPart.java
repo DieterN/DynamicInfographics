@@ -93,5 +93,10 @@ public class CompositeMainPart extends MainPart{
 		return map;
 	}
 
+	@Override
+	public void accept(MainPartVisitor visitor) {
+		visitor.visit(this);
+	}
+
 
 }
