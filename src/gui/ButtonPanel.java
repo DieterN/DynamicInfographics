@@ -99,11 +99,12 @@ public class ButtonPanel extends UnscalablePanel implements MainPartVisitor{
 			extraButton.addMouseListener(new java.awt.event.MouseAdapter() {
 			    public void mouseEntered(java.awt.event.MouseEvent evt) {
 			    	Rectangle rectangle = new Rectangle(leaf.getTopLeftCornerX(), leaf.getTopLeftCornerY(), leaf.getImageWidth(), leaf.getImageHeight());
-//			    	graphPanel.setMouseOverRectangle(rectangle);
+			    	graphPanel.setMouseOverRectangle(rectangle);
+			    	graphPanel.drawMouseOverRectangle();
 			    }
 
 			    public void mouseExited(java.awt.event.MouseEvent evt) {
-//			    	graphPanel.resetMouseOverRectangle();
+			    	graphPanel.removeMouseOverRectangle();
 			    }
 			});
 		}

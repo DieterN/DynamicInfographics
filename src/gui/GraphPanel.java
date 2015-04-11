@@ -6,6 +6,7 @@ import infographic.LeafMainPart;
 import infographic.MainPart;
 
 import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -38,6 +39,7 @@ public class GraphPanel extends UnscalablePanel implements FadeOutCallback{
 	private UUID fadeOutWaitId;
 
 	private Rectangle highlightRectangle;
+	private Rectangle mouseOverRectangle;
 
 	private Timer highlightTimer;
 	
@@ -88,7 +90,15 @@ public class GraphPanel extends UnscalablePanel implements FadeOutCallback{
 		super.paint(g);
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
-		drawRectangle();
+		drawRectangle(g);
+		drawMouseOverRectangle();
+		
+
+//		Rectangle rectangle = new Rectangle(0, 0, 200, 200);
+//		Graphics2D g2d = (Graphics2D) g;
+//		if(highlightRectangle != null){
+//			g2d.draw(highlightRectangle);
+//		}
 	}
 	
 	/**
@@ -195,7 +205,7 @@ public class GraphPanel extends UnscalablePanel implements FadeOutCallback{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(stroke < 3){
-					drawRectangle();
+					drawRectangle(getGraphics());
 					stroke += 0.2f;
 				}
 				else{
@@ -207,9 +217,10 @@ public class GraphPanel extends UnscalablePanel implements FadeOutCallback{
 		highlightTimer.start();
 	}
 	
-	private void drawRectangle() {
+	private void drawRectangle(Graphics g) {
 		if(highlightRectangle != null){
-			Graphics2D g2d = (Graphics2D) getGraphics();
+			Graphics2D g2d = (Graphics2D) g;
+//			Graphics2D g2d = (Graphics2D) getGraphics();
 			g2d.setStroke(new BasicStroke(stroke));
 			g2d.draw(highlightRectangle);
 		}
@@ -232,6 +243,25 @@ public class GraphPanel extends UnscalablePanel implements FadeOutCallback{
 	
 	public void resetHighlightRectangle(){
 		this.highlightRectangle = null;
+	}
+
+	public void drawMouseOverRectangle(){
+		if(mouseOverRectangle != null){
+			Graphics2D g2d = (Graphics2D) getGraphics();
+			g2d.setColor(Color.red);
+			float[] dash = { 5F, 5F };
+			g2d.setStroke(new BasicStroke( 2F, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER, 3F, dash, 0F ));
+			g2d.draw(mouseOverRectangle);
+		}
+	}
+
+	public void setMouseOverRectangle(Rectangle rectangle){
+		this.mouseOverRectangle = rectangle;
+	}
+	
+	public void removeMouseOverRectangle(){
+		this.mouseOverRectangle = null;
+		repaint();
 	}
 	
 }
