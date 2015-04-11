@@ -6,7 +6,6 @@ import infographic.LeafMainPart;
 import infographic.MainPart;
 import infographic.MainPartVisitor;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
@@ -18,7 +17,6 @@ import java.util.UUID;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.UIManager;
 
 public class ButtonPanel extends UnscalablePanel implements MainPartVisitor{
 

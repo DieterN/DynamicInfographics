@@ -1,5 +1,7 @@
 package gui;
 
+import infographic.LeafMainPart;
+
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
@@ -67,6 +69,8 @@ public class ControlPanel extends UnscalablePanel{
 		setSizeTo(new Dimension(200,(int) rectangle.getHeight()));
 	}
 	
+	private int index = 1;
+	
 	private JButton makeStartButton(final JTextField name) {
 		JButton start = new JButton("Start session");
 		
@@ -86,20 +90,18 @@ public class ControlPanel extends UnscalablePanel{
         			setSessionInfoText("Session started");
         		}
 //            	UUID extraId = testMethodGetMainPart();
-//            	showExtraPart(extraId);
+//            	gui.showExtraPart(extraId);
 //            	index ++;
 //            }
 //
 //			private UUID testMethodGetMainPart() {
 //				int localIndex = 0;
-//				for(MainPart part : infographic.getMappedMainParts().values()){
-//					if(part instanceof LeafMainPart){
-//						if(localIndex == index){
-//							return part.getId();
-//						}
-//						else{
-//							localIndex++;
-//						}
+//				for(LeafMainPart part : gui.getInfographic().getAllLeafs()){
+//					if(localIndex == index){
+//						return part.getId();
+//					}
+//					else{
+//						localIndex++;
 //					}
 //				}
 //				return null;
