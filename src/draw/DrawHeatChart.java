@@ -36,21 +36,17 @@ public class DrawHeatChart {
 			BufferedImage bimg = infographic.getImage();
 			
 			String name = (String) session.get("name");
-			
-			double[][] attentionData = createMatrix(session, bimg, "attention");
-			double[][] meditationData = createMatrix(session, bimg, "meditation");
-			double[][] combinedData = createMatrix(session, bimg, "combined");
-			if(Statics.absoluteHeatChart){
-				attentionData[0][1] = 1;
-				attentionData[1][0] = 100;
-				meditationData[0][1] = 1;
-				meditationData[1][0] = 100;
-				combinedData[0][1] = 1;
-				combinedData[1][0] = 200;
+			 
+			for(String eSense: Statics.eSensesToExtract){
+				
+				double[][] data = createMatrix(session, bimg, eSense);
+				if(Statics.absoluteHeatChart){
+					data[0][1] = 1;
+					data[1][0] = 100;
+				}
+				makeHeatChart(data, name, infographicName, eSense, bimg);
 			}
-			makeHeatChart(attentionData, name, infographicName, "attention", bimg);
-			makeHeatChart(meditationData, name, infographicName, "meditation", bimg);
-			makeHeatChart(combinedData, name, infographicName, "combined", bimg);
+			
 		}
 	}
 
@@ -135,12 +131,7 @@ public class DrawHeatChart {
 	private int extractMeasuredValue(String dataString, DBObject m) {
 		int measuredValue = -1;
 		DBObject eSense = (DBObject) m.get("ESenseData");
-		if(dataString.equals("attention"))
-			measuredValue = (int) eSense.get("attention");
-		else if(dataString.equals("meditation"))
-			measuredValue = (int) eSense.get("meditation");
-		else if(dataString.equals("combined"))
-			measuredValue = (int) eSense.get("attention") + (int) eSense.get("meditation");
+		measuredValue = (int) eSense.get(dataString);
 		
 		return measuredValue;
 	}

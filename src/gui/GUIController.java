@@ -15,8 +15,6 @@ import javax.swing.JScrollPane;
 
 import tracking.Tracker;
 import main.Statics;
-import dataTypes.ESenseData;
-import dataTypes.EegData;
 import dataTypes.SensorData;
 import analyzation.InfographicController;
 import brainwave.BrainwaveListenerCallback;
@@ -68,32 +66,12 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback{
 		setVisible(true);	
 	}
 	
-	@Override
-	public void sendESenseData(ESenseData data) {
-		JScrollBar vertical = scroll.getVerticalScrollBar();
-		JScrollBar horizontal = scroll.getHorizontalScrollBar();
-		if(Statics.reading){
-			tracker.sendESenseAndScrollData(data, horizontal.getValue(), vertical.getValue());
-		}
-		
-		control.setConnectionStatusText(data.getStatus(), data.getAttentionValue(), data.getMeditationValue());
-	}
-	
-	@Override
-	public void sendEegData(EegData data) {
-		JScrollBar vertical = scroll.getVerticalScrollBar();
-		JScrollBar horizontal = scroll.getHorizontalScrollBar();
-		if(Statics.reading){
-			tracker.sendEegData(data, horizontal.getValue(), vertical.getValue());
-		}
-	}
-	
 	public void sendSensorData(SensorData data){
 		System.out.println("Entered");
 		JScrollBar vertical = scroll.getVerticalScrollBar();
 		JScrollBar horizontal = scroll.getHorizontalScrollBar();
 		if(Statics.reading){
-			tracker.sendSensorData(data, horizontal.getValue(), vertical.getValue());
+			tracker.sendSensorAndScrollData(data, horizontal.getValue(), vertical.getValue());
 		}		
 		
 		control.setConnectionStatusText(data.getStatus(), data.getAttentionValue(), data.getMeditationValue());

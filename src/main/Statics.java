@@ -1,5 +1,8 @@
 package main;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 import analyzation.PolicyType;
@@ -54,6 +57,8 @@ public class Statics {
 	
 	public static final boolean extractOnlyOneInfographic = false;
 	public static final String extractInfographic ="infographic_drought";
+	
+	public static final List<String> eSensesToExtract = new ArrayList<String>(Arrays.asList("attention", "meditation"));
 	
 	public static final String heatChartsFolder = "heatcharts/";	
 	public static boolean absoluteHeatChart = true;

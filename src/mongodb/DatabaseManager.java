@@ -13,8 +13,6 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 
-import dataTypes.ESensePacket;
-import dataTypes.EegPacket;
 import dataTypes.SensorDataPacket;
 import tracking.TrackerCallback;
 
@@ -28,8 +26,7 @@ public class DatabaseManager implements TrackerCallback{
 
 	private static DatabaseManager instance = null;
 	private static DB db;
-	private static List<DBObject> eSenseMeasurements = new ArrayList<DBObject>();
-	private static List<DBObject> eegMeasurements = new ArrayList<DBObject>();
+	private static List<DBObject> measurements = new ArrayList<DBObject>();
 	
 	private DatabaseManager(){
 		connectToDatabase();
@@ -55,19 +52,7 @@ public class DatabaseManager implements TrackerCallback{
 	    }       
 	}
 	
-	@Override
-	public void sendESensePacket(ESensePacket packet) {		
-		java.util.Date date = new java.util.Date();
-		Timestamp timestamp = new Timestamp(date.getTime());
-		
-		BasicDBObject measurement = new BasicDBObject("timestamp", timestamp)
-        .append("ESenseData", new BasicDBObject("attention", packet.getAttentionValue()).append("meditation", packet.getMeditationValue()))
-        .append("Position", new BasicDBObject("xPos", packet.getPosition().x).append("yPos", packet.getPosition().y));
-		
-		eSenseMeasurements.add(measurement);
-	}
-	
-	public static void storeESenseDataInDB() {
+	public static void storeDataInDB() {
 		DBCollection sessions = null;
 		DBObject options = BasicDBObjectBuilder.start().get();
 		if(db.collectionExists("sessions")){
@@ -79,34 +64,27 @@ public class DatabaseManager implements TrackerCallback{
 		BasicDBObject session = new BasicDBObject("SID", Statics.SID)
 		.append("name", Statics.reader_name)
 		.append("infographic", Statics.inputFolder)
-		.append("measurements", eSenseMeasurements);
+		.append("measurements", measurements);
 		sessions.insert(session);
-
-		//TODO: store eeg data
 		
         Statics.SID = "not_reading";
-        eSenseMeasurements.clear();
-        eegMeasurements.clear();
+        measurements.clear();
 	}
 
 	@Override
-	public void sendEegPacket(EegPacket packet) {	
+	public void sendSensorDataPacket(SensorDataPacket packet) {	
 		java.util.Date date = new java.util.Date();
 		Timestamp timestamp = new Timestamp(date.getTime());
 		
 		BasicDBObject measurement = new BasicDBObject("timestamp", timestamp)
-        .append("EegData", new BasicDBObject("delta", packet.getDelta()).append("theta", packet.getTheta()))
-        .append("EegData", new BasicDBObject("lowAlpha", packet.getLowAlpha()).append("highAlpha", packet.getHighAlpha()))
-        .append("EegData", new BasicDBObject("lowBeta", packet.getLowBeta()).append("highBeta", packet.getHighBeta()))
-        .append("EegData", new BasicDBObject("lowGamma", packet.getLowGamma()).append("highGamma", packet.getHighGamma()))
+        .append("ESenseData", new BasicDBObject("attention", packet.getAttentionValue()).append("meditation", packet.getMeditationValue())
+        		.append("delta", packet.getDelta()).append("theta", packet.getTheta())
+        		.append("lowAlpha", packet.getLowAlpha()).append("highAlpha", packet.getHighAlpha())
+        		.append("lowBeta", packet.getLowBeta()).append("highBeta", packet.getHighBeta())
+        		.append("lowGamma", packet.getLowGamma()).append("highGamma", packet.getHighGamma()))
         .append("Position", new BasicDBObject("xPos", packet.getPosition().x).append("yPos", packet.getPosition().y));
 		
-		eegMeasurements.add(measurement);
+		measurements.add(measurement);
 	}
 
-	@Override
-	public void sendSensorDataPacket(SensorDataPacket packet) {
-		// TODO Auto-generated method stub
-		
-	}
 }

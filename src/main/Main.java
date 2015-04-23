@@ -25,10 +25,10 @@ public class Main {
 			InfographicParser parser = new InfographicParser(Statics.inputFolder);
 			Infographic infographic = parser.parse();
 	
-//			DatabaseManager manager = DatabaseManager.getInstance();
+			DatabaseManager manager = DatabaseManager.getInstance();
 			
 			List<TrackerCallback> trackerCallbacks = new ArrayList<TrackerCallback>();
-//			trackerCallbacks.add(manager);
+			trackerCallbacks.add(manager);
 	
 			Tracker tracker = new MouseTracker(trackerCallbacks); //Get from statics later on and change to MODUS (-> mouse/eye)
 			GUIController guicontroller = new GUIController(infographic, tracker);

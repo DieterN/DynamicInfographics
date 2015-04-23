@@ -8,7 +8,6 @@ import com.neurosky.developer.connector.ThinkGearListener;
 import com.neurosky.developer.connector.ThinkGearSocketChanged;
 
 import dataTypes.ESenseData;
-import dataTypes.EegData;
 import dataTypes.SensorData;
 
 /**
@@ -20,12 +19,10 @@ import dataTypes.SensorData;
 public class BrainwaveListener implements ThinkGearListener {
 	
 	private List<BrainwaveListenerCallback> callbacks;
-	private ConnectionStatus status;
 	private ConcurrentLinkedQueue<ESenseData> queue = new ConcurrentLinkedQueue<ESenseData>();
 	
 	public BrainwaveListener(List<BrainwaveListenerCallback> callbacks) {
 		this.callbacks = callbacks;
-		status = ConnectionStatus.NOT_CONNECTED;
 	}
 
 	public void startSensor() {
@@ -43,31 +40,6 @@ public class BrainwaveListener implements ThinkGearListener {
 			callback.sendSensorData(data);
 		}
 	}
-	
-	private void informCallbacksESenseData(ESenseData data){
-		for(BrainwaveListenerCallback callback: callbacks){
-			callback.sendESenseData(data);
-		}
-	}
-	
-	private void informCallbacksEegData(EegData data){
-		for(BrainwaveListenerCallback callback: callbacks){
-			callback.sendEegData(data);
-		}
-	}
-	
-//	@Override
-//	public void eSenseEvent(int attentionValue, int meditationValue) {
-//		System.out.println("ESense");
-//		if(attentionValue != 0 && meditationValue != 0){
-//			this.status = ConnectionStatus.CONNECTED;
-//			informCallbacksESenseData(new ESenseData(ConnectionStatus.CONNECTED, attentionValue, meditationValue));
-//		}
-//		else{
-//			this.status = ConnectionStatus.BAD_CONNECTION;
-//			informCallbacksESenseData(new ESenseData(ConnectionStatus.BAD_CONNECTION, attentionValue, meditationValue));
-//		}
-//	}
 	
 	@Override
 	public void eSenseEvent(int attentionValue, int meditationValue) {
@@ -110,7 +82,6 @@ public class BrainwaveListener implements ThinkGearListener {
 		SensorData data = new SensorData(eSenseData.getStatus(), eSenseData.getAttentionValue(), eSenseData.getMeditationValue(), 
 										 delta, theta, lowAlpha, highAlpha, lowBeta, highBeta, lowGamma, highGamma);
 		informCallbacks(data);
-//		informCallbacksEegData(new EegData(status, delta, theta, lowAlpha, highAlpha, lowBeta, highBeta, lowGamma, highGamma));
 	}
 
 	@Override

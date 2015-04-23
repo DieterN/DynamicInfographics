@@ -59,7 +59,6 @@ public class DataExtractor {
 		fields.put("infographic", 1);
 		fields.put("measurements.ESenseData", 1);
 		fields.put("measurements.Position", 1);
-//		fields.put("measurements.ExtraPartId", 1);
 		DBObject project = new BasicDBObject("$project", fields);
 		
 //		DBObject unwind = new BasicDBObject("$unwind", "$measurements");

@@ -1,7 +1,5 @@
 package gui;
 
-import infographic.LeafMainPart;
-
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
@@ -69,7 +67,7 @@ public class ControlPanel extends UnscalablePanel{
 		setSizeTo(new Dimension(200,(int) rectangle.getHeight()));
 	}
 	
-	private int index = 1;
+//	private int index = 1;
 	
 	private JButton makeStartButton(final JTextField name) {
 		JButton start = new JButton("Start session");
@@ -118,7 +116,7 @@ public class ControlPanel extends UnscalablePanel{
             public void actionPerformed(ActionEvent event) {
 
                 Statics.reading = false;
-//                DatabaseManager.storeESenseDataInDB();
+                DatabaseManager.storeDataInDB();
     			setSessionInfoText("Session stopped");
                 gui.clearExtraParts();
             }
