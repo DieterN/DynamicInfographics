@@ -16,8 +16,11 @@ import javax.swing.JScrollPane;
 import tracking.Tracker;
 import main.Statics;
 import dataTypes.ESenseData;
+import dataTypes.EegData;
+import dataTypes.SensorData;
 import analyzation.InfographicController;
 import brainwave.BrainwaveListenerCallback;
+import brainwave.ConnectionStatus;
 
 public class GUIController extends JFrame implements BrainwaveListenerCallback{
 	
@@ -66,14 +69,34 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback{
 	}
 	
 	@Override
-	public void sendESenseMeasurement(ESenseData eSenseData) {
+	public void sendESenseData(ESenseData data) {
 		JScrollBar vertical = scroll.getVerticalScrollBar();
 		JScrollBar horizontal = scroll.getHorizontalScrollBar();
 		if(Statics.reading){
-			tracker.sendESenseAndScrollData(eSenseData, horizontal.getValue(), vertical.getValue());
+			tracker.sendESenseAndScrollData(data, horizontal.getValue(), vertical.getValue());
 		}
 		
-		control.setConnectionStatusText(eSenseData.getStatus(), eSenseData.getAttentionValue(), eSenseData.getMeditationValue());
+		control.setConnectionStatusText(data.getStatus(), data.getAttentionValue(), data.getMeditationValue());
+	}
+	
+	@Override
+	public void sendEegData(EegData data) {
+		JScrollBar vertical = scroll.getVerticalScrollBar();
+		JScrollBar horizontal = scroll.getHorizontalScrollBar();
+		if(Statics.reading){
+			tracker.sendEegData(data, horizontal.getValue(), vertical.getValue());
+		}
+	}
+	
+	public void sendSensorData(SensorData data){
+		System.out.println("Entered");
+		JScrollBar vertical = scroll.getVerticalScrollBar();
+		JScrollBar horizontal = scroll.getHorizontalScrollBar();
+		if(Statics.reading){
+			tracker.sendSensorData(data, horizontal.getValue(), vertical.getValue());
+		}		
+		
+		control.setConnectionStatusText(data.getStatus(), data.getAttentionValue(), data.getMeditationValue());
 	}
 
 	public UUID getPartID(double width, double height){

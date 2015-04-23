@@ -2,6 +2,7 @@ package analyzation;
 
 import main.Statics;
 import dataTypes.ESensePacket;
+import dataTypes.SensorDataPacket;
 
 public class CombinedPolicy extends Policy{
 
@@ -10,6 +11,21 @@ public class CombinedPolicy extends Policy{
 	
 	@Override
 	public boolean showExtraPart(ESensePacket packet) {
+		int attention = packet.getAttentionValue();
+		int meditation = packet.getMeditationValue();
+		if(currentAttentionAverage == -1){
+			currentAttentionAverage = attention;
+			currentMeditationAverage = meditation;
+		}
+		else{
+			currentAttentionAverage = Statics.alpha*attention + (1-Statics.alpha)*currentAttentionAverage;
+			currentMeditationAverage = Statics.alpha*meditation + (1-Statics.alpha)*currentMeditationAverage;
+		}
+		return (currentAttentionAverage + currentMeditationAverage >= Statics.minCombinedValue);
+	}
+
+	@Override
+	public boolean showExtraPart(SensorDataPacket packet) {
 		int attention = packet.getAttentionValue();
 		int meditation = packet.getMeditationValue();
 		if(currentAttentionAverage == -1){

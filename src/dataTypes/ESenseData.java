@@ -2,22 +2,22 @@ package dataTypes;
 
 import brainwave.ConnectionStatus;
 
-public class ESenseData {
+public class ESenseData{
 	
 	private ConnectionStatus status;
 	private int attentionValue;
 	private int meditationValue;
 	
-	public ESenseData(ConnectionStatus status, int attentionValue, int meditationValue) {
+	public ESenseData(ConnectionStatus status, int attentionValue, int meditationValue){
 		this.status = status;
 		this.attentionValue = attentionValue;
 		this.meditationValue = meditationValue;
 	}
-
+	
 	public ConnectionStatus getStatus() {
 		return status;
 	}
-	
+
 	public void setStatus(ConnectionStatus status) {
 		this.status = status;
 	}

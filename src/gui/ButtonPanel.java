@@ -18,6 +18,8 @@ import java.util.UUID;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 
+import main.Statics;
+
 public class ButtonPanel extends UnscalablePanel implements MainPartVisitor{
 
 	private static final long serialVersionUID = 1L;
@@ -27,22 +29,22 @@ public class ButtonPanel extends UnscalablePanel implements MainPartVisitor{
 	private final int buttonWidth = 200;
 	private Infographic infographic;
 	private GraphPanel graphPanel;
-	private int nbOfLeafs = 3;
 
 	public ButtonPanel(Infographic infographic, GraphPanel graphPanel){
 		this.infographic = infographic;
 		this.graphPanel = graphPanel;
-		for(LeafMainPart part: infographic.getAllLeafs()){
-			visibleButtonList.add(part.getId());
-			nbOfLeafs--;
-			if(nbOfLeafs == 0){
-				break;
-			}
+		if(Statics.interactive){
+			setAllButtonsVisible();
 		}
-		nbOfLeafs = 3;
 		drawButtonPanel();
 	}
 	
+	private void setAllButtonsVisible() {
+		for(LeafMainPart part: infographic.getAllLeafs()){
+			visibleButtonList.add(part.getId());
+		}
+	}
+
 	public void drawButtonPanel(){
 		removeAll();
 		setAlignmentY(TOP_ALIGNMENT);
@@ -82,7 +84,10 @@ public class ButtonPanel extends UnscalablePanel implements MainPartVisitor{
 	private void createExtraButton(final LeafMainPart leaf) {
 		final UUID id = leaf.getId();
 		if(leaf.getChild() != null && visibleButtonList.contains(id)){
-			final UnscalableButton extraButton = new UnscalableButton("Review extra part");
+			final UnscalableButton extraButton = new UnscalableButton("Review extra information");
+			if(Statics.interactive){
+				extraButton.setText("View extra information");
+			}
 			extraButton.setSizeTo(new Dimension(buttonWidth,buttonHeight));
 			extraButton.setVisible(true);
 			add(extraButton);

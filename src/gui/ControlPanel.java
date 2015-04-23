@@ -92,8 +92,8 @@ public class ControlPanel extends UnscalablePanel{
 //            	UUID extraId = testMethodGetMainPart();
 //            	gui.showExtraPart(extraId);
 //            	index ++;
-//            }
-//
+            }
+
 //			private UUID testMethodGetMainPart() {
 //				int localIndex = 0;
 //				for(LeafMainPart part : gui.getInfographic().getAllLeafs()){
@@ -105,7 +105,7 @@ public class ControlPanel extends UnscalablePanel{
 //					}
 //				}
 //				return null;
-			}
+//			}
         });
         return start;
 	}
@@ -118,7 +118,7 @@ public class ControlPanel extends UnscalablePanel{
             public void actionPerformed(ActionEvent event) {
 
                 Statics.reading = false;
-                DatabaseManager.storeESenseDataInDB();
+//                DatabaseManager.storeESenseDataInDB();
     			setSessionInfoText("Session stopped");
                 gui.clearExtraParts();
             }

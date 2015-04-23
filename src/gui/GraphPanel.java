@@ -45,6 +45,8 @@ public class GraphPanel extends UnscalablePanel implements FadeOutCallback{
 	
 	public GraphPanel(Infographic infographic) {
 		this.infographic = infographic; 
+
+		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		
 		this.mainParts = new JPanel();
 		this.buttonPanel = new ButtonPanel(infographic, this);
@@ -90,7 +92,7 @@ public class GraphPanel extends UnscalablePanel implements FadeOutCallback{
 		super.paint(g);
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
-		drawRectangle(g);
+		drawHighlightRectangle(g);
 		drawMouseOverRectangle();
 		
 
@@ -113,6 +115,7 @@ public class GraphPanel extends UnscalablePanel implements FadeOutCallback{
 					waitForFadeOut = true;
 					fadeOutWaitId = id;
 				}
+				withdrawHighlight();
 				fadeOutExtraPart();
 			}
 			
@@ -139,13 +142,13 @@ public class GraphPanel extends UnscalablePanel implements FadeOutCallback{
 		if(id == null){
 			return;
 		}
-		Statics.partId = null;
 		buttonPanel.setButtonVisible(id);
 		drawExtraPartWithIDAndWithGivenFading(id, 1.0f, false, true, this);	
 	}
 
 	@Override
 	public void fadeOutFinished() {
+		Statics.partId = null;
 		if(waitForFadeOut){
 			continueShowExtraPart(fadeOutWaitId);
 		}
@@ -205,7 +208,7 @@ public class GraphPanel extends UnscalablePanel implements FadeOutCallback{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(stroke < 3){
-					drawRectangle(getGraphics());
+					drawHighlightRectangle(getGraphics());
 					stroke += 0.2f;
 				}
 				else{
@@ -217,7 +220,7 @@ public class GraphPanel extends UnscalablePanel implements FadeOutCallback{
 		highlightTimer.start();
 	}
 	
-	private void drawRectangle(Graphics g) {
+	private void drawHighlightRectangle(Graphics g) {
 		if(highlightRectangle != null){
 			Graphics2D g2d = (Graphics2D) g;
 //			Graphics2D g2d = (Graphics2D) getGraphics();

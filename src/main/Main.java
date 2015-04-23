@@ -33,12 +33,12 @@ public class Main {
 			Tracker tracker = new MouseTracker(trackerCallbacks); //Get from statics later on and change to MODUS (-> mouse/eye)
 			GUIController guicontroller = new GUIController(infographic, tracker);
 			
-//			List<BrainwaveListenerCallback> brainwaveListenerCallbacks = new ArrayList<BrainwaveListenerCallback>();
-//			brainwaveListenerCallbacks.add(guicontroller);
+			List<BrainwaveListenerCallback> brainwaveListenerCallbacks = new ArrayList<BrainwaveListenerCallback>();
+			brainwaveListenerCallbacks.add(guicontroller);
 			
 			// Start brainwave sensor listener
-//			BrainwaveListener listener = new BrainwaveListener(brainwaveListenerCallbacks); //Start listening to the brainwave sensor
-//			listener.startSensor();
+			BrainwaveListener listener = new BrainwaveListener(brainwaveListenerCallbacks); //Start listening to the brainwave sensor
+			listener.startSensor();
 			
 			//Start GUI (takes control from now on)
 			guicontroller.startGUI();	

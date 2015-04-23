@@ -84,11 +84,6 @@ public class Infographic {
 			height += lastPart.getImageHeight();
 		}
 		return height;
-//		int height = 0;
-//		for(MainPart part: mainParts){
-//			height += part.getImageHeight();
-//		}
-//		return height;
 	}
 	
 	public UUID getIDofPartAt(double width, double height){
@@ -97,7 +92,7 @@ public class Infographic {
 			int topLeftCornerY = part.getTopLeftCornerY();
 			if(topLeftCornerY <= height && ((topLeftCornerY + part.getImageHeight()) > height)){
 				id = part.getIdOfMainPartAt(width);
-				break; //(return previous part ID)
+				break;
 			}
 		}
 		return id;
