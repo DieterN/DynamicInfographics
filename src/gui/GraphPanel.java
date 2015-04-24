@@ -62,11 +62,28 @@ public class GraphPanel extends UnscalablePanel implements FadeOutCallback{
 		add(buttonPanel);
 		add(extraParts);
 		
-		initializeInfographic(infographic);
-		
+		drawInfographic(infographic);
 	}
 
-	private void initializeInfographic(Infographic infographic) {
+	public void drawNewInfographic(Infographic infographic){
+		mainParts.removeAll();
+		extraParts.removeAll();
+		drawInfographic(infographic);
+		
+		this.infographic = infographic;
+		Statics.partId = null;
+		
+		buttonPanel.drawNewInfographic(infographic);
+		
+		highlightRectangle = null;
+		mouseOverRectangle = null;
+		
+		mainParts.revalidate();
+		extraParts.revalidate();
+		buttonPanel.revalidate();
+	}
+	
+	private void drawInfographic(Infographic infographic) {
 		int extraWidth = 0;
 		//Add main, button and extra part panels to the graphPanel
 		for(MainPart part : infographic.getMainParts()){

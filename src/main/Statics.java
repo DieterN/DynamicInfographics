@@ -21,6 +21,8 @@ public class Statics {
 
 	public static final String default_text_name_field = "Fill in your name";
 	public static String reader_name = "";	
+	
+	public static final List<String> infographicList = new ArrayList<String>(Arrays.asList("Plane", "Water"));
 
 //	public static final String inputFolder = "infographic_drought"; //this should also be the name of the infographic
 //	public static final int nbTimesOutExtraParts = 5;
@@ -36,7 +38,7 @@ public class Statics {
 //	public static final int nbTimesOutExtraParts = 5;
 //	public static final int nbOfTimesMeasuredInMainPart = 5; 
 	
-	public static final String inputFolder = "infographic_plane"; //this should also be the name of the infographic
+	public static String inputFolder = "infographic_plane"; //this should also be the name of the infographic
 	public static final int nbTimesOutExtraParts = 5;
 	public static final int nbOfTimesMeasuredInMainPart = 5; 
 	

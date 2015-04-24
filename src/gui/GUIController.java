@@ -47,9 +47,9 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback{
 	 * Start the gui, only to be called at the beginning of the program
 	 */
 	public void startGUI(){
-		if(this.isVisible()){
-			throw new IllegalStateException("This method should only be called at the start of the program");
-		}		
+//		if(this.isVisible()){
+//			throw new IllegalStateException("This method should only be called at the start of the program");
+//		}		
 		//Add right panes to basic layout and add basic to frame
 		basic.setLayout(new BoxLayout(basic, BoxLayout.X_AXIS));
 		basic.add(scroll);
@@ -68,7 +68,6 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback{
 	}
 	
 	public void sendSensorData(SensorData data){
-		System.out.println("Entered");
 		JScrollBar vertical = scroll.getVerticalScrollBar();
 		JScrollBar horizontal = scroll.getHorizontalScrollBar();
 		if(Statics.reading){
@@ -92,6 +91,10 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback{
 	
 	public void clearExtraParts(){
 		graphPanel.clearExtraParts();
+	}
+	
+	public void drawNewInfographic(Infographic infographic){
+		graphPanel.drawNewInfographic(infographic);
 	}
 	
 	/***********************

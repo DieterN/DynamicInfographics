@@ -33,9 +33,6 @@ public class ButtonPanel extends UnscalablePanel implements MainPartVisitor{
 	public ButtonPanel(Infographic infographic, GraphPanel graphPanel){
 		this.infographic = infographic;
 		this.graphPanel = graphPanel;
-		if(Statics.interactive){
-			setAllButtonsVisible();
-		}
 		drawButtonPanel();
 	}
 	
@@ -46,6 +43,10 @@ public class ButtonPanel extends UnscalablePanel implements MainPartVisitor{
 	}
 
 	public void drawButtonPanel(){
+		if(Statics.interactive){
+			setAllButtonsVisible();
+		}
+		
 		removeAll();
 		setAlignmentY(TOP_ALIGNMENT);
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -132,4 +133,8 @@ public class ButtonPanel extends UnscalablePanel implements MainPartVisitor{
 		createCompositeButtonPanel(part);
 	}
 	
+	public void drawNewInfographic(Infographic infographic) {
+		this.infographic = infographic;
+		drawButtonPanel();
+	}
 }
