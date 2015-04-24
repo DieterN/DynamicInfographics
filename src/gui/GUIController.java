@@ -28,6 +28,7 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback{
 	private JScrollPane scroll;
 	private GraphPanel graphPanel;
 	private ControlPanel control;
+	private InfographicController controller;
 	private Tracker tracker; //tracker that monitors the position in this GUI
 	
 	public GUIController(Infographic infographic, Tracker tracker){
@@ -37,7 +38,7 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback{
 		this.graphPanel = new GraphPanel(infographic);
 		this.scroll = new JScrollPane(graphPanel);
 		
-		InfographicController controller = new InfographicController(this, infographic);
+		controller = new InfographicController(this, infographic);
 		
 		this.tracker = tracker;
 		tracker.addCallback(controller);
@@ -95,6 +96,9 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback{
 	
 	public void drawNewInfographic(Infographic infographic){
 		graphPanel.drawNewInfographic(infographic);
+		tracker.removeCallback(controller);
+		controller = new InfographicController(this, infographic);
+		tracker.addCallback(controller);
 	}
 	
 	/***********************

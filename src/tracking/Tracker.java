@@ -41,5 +41,14 @@ public abstract class Tracker{
 	public void addCallback(TrackerCallback callback){
 		this.callbacks.add(callback);
 	}
+	
+	public void removeCallback(TrackerCallback removeCallback){
+		List<TrackerCallback> copyOfCallbacks = callbacks;
+		for(TrackerCallback callback: copyOfCallbacks){
+			if(removeCallback == callback){
+				callbacks.remove(callback);
+			}
+		}
+	}
 
 }
