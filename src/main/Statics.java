@@ -32,7 +32,11 @@ public class Statics {
 //	public static final int nbTimesOutExtraParts = 5;
 //	public static final int nbOfTimesMeasuredInMainPart = 5; 
 	
-	public static final String inputFolder = "infographic_water"; //this should also be the name of the infographic
+//	public static final String inputFolder = "infographic_water"; //this should also be the name of the infographic
+//	public static final int nbTimesOutExtraParts = 5;
+//	public static final int nbOfTimesMeasuredInMainPart = 5; 
+	
+	public static final String inputFolder = "infographic_plane"; //this should also be the name of the infographic
 	public static final int nbTimesOutExtraParts = 5;
 	public static final int nbOfTimesMeasuredInMainPart = 5; 
 	

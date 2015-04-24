@@ -12,13 +12,13 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
+import javax.swing.WindowConstants;
 
 import tracking.Tracker;
 import main.Statics;
 import dataTypes.SensorData;
 import analyzation.InfographicController;
 import brainwave.BrainwaveListenerCallback;
-import brainwave.ConnectionStatus;
 
 public class GUIController extends JFrame implements BrainwaveListenerCallback{
 	
@@ -63,6 +63,7 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback{
         //Set frame size to size of screen and make it visible
 		Rectangle rectangle = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
 		setSize(rectangle.getSize());
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setVisible(true);	
 	}
 	
