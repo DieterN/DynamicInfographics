@@ -12,7 +12,7 @@ public class Statics {
 	public static final boolean showGUI = true;
 	public static final boolean extractData = false;
 
-	public static final boolean interactive = false; //If set to true -> interactive infographic (otherwise dynamic infographic)
+	public static final boolean interactive = true; //If set to true -> interactive infographic (otherwise dynamic infographic)
 	
 	public static boolean reading = false; //true if someone is reading the infographic
 	public static String SID = "not_reading"; //unique SID identifying the current session
@@ -28,7 +28,11 @@ public class Statics {
 	
 //	public static final String inputFolder = "test";
 	
-	public static final String inputFolder = "infographic_eyes"; //this should also be the name of the infographic
+//	public static final String inputFolder = "infographic_eyes"; //this should also be the name of the infographic
+//	public static final int nbTimesOutExtraParts = 5;
+//	public static final int nbOfTimesMeasuredInMainPart = 5; 
+	
+	public static final String inputFolder = "infographic_water"; //this should also be the name of the infographic
 	public static final int nbTimesOutExtraParts = 5;
 	public static final int nbOfTimesMeasuredInMainPart = 5; 
 	

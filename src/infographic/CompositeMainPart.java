@@ -29,10 +29,12 @@ public class CompositeMainPart extends MainPart{
 		
 		for(MainPart subPart: subParts){
 			ExtraPart child = subPart.getHighestChild();
-			int childHeight = child.getImageHeight();
-			if(childHeight > height){
-				heighestChild = child;
-				height = childHeight;
+			if(child != null){
+				int childHeight = child.getImageHeight();
+				if(childHeight > height){
+					heighestChild = child;
+					height = childHeight;
+				}
 			}
 		}
 		
