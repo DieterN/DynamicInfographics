@@ -17,6 +17,9 @@ import java.util.UUID;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import main.Statics;
 
@@ -96,8 +99,13 @@ public class ButtonPanel extends UnscalablePanel implements MainPartVisitor{
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					graphPanel.resetHighlightRectangle();
-					graphPanel.showExtraPart(id);
+					if(Statics.reading){
+						graphPanel.resetHighlightRectangle();
+						graphPanel.showExtraPart(id);						
+					}
+					else{
+	        			JOptionPane.showMessageDialog(SwingUtilities.getAncestorOfClass(JFrame.class, graphPanel), "Can't show extra information! Start a session first!", "Error", JOptionPane.ERROR_MESSAGE);
+					}
 				}
 			});
 			extraButton.addMouseListener(new java.awt.event.MouseAdapter() {

@@ -13,7 +13,7 @@ public class Statics {
 	public static final boolean extractData = false;
 
 	public static final boolean interactive = true; //If set to true -> interactive infographic (otherwise dynamic infographic)
-	public static final boolean highlighting = false; //If set to true -> main parts are highlighted when there extra part is shown
+	public static final boolean highlighting = true; //If set to true -> main parts are highlighted when there extra part is shown
 	
 	public static boolean reading = false; //true if someone is reading the infographic
 	public static String SID = "not_reading"; //unique SID identifying the current session
@@ -25,27 +25,10 @@ public class Statics {
 	
 	public static final List<String> infographicList = new ArrayList<String>(Arrays.asList("Plane", "Water"));
 
-//	public static final String inputFolder = "infographic_drought"; //this should also be the name of the infographic
-//	public static final int nbTimesOutExtraParts = 5;
-//	public static final int nbOfTimesMeasuredInMainPart = 5; 
-	
-//	public static final String inputFolder = "test";
-	
-//	public static final String inputFolder = "infographic_eyes"; //this should also be the name of the infographic
-//	public static final int nbTimesOutExtraParts = 5;
-//	public static final int nbOfTimesMeasuredInMainPart = 5; 
-	
-//	public static final String inputFolder = "infographic_water"; //this should also be the name of the infographic
-//	public static final int nbTimesOutExtraParts = 5;
-//	public static final int nbOfTimesMeasuredInMainPart = 5; 
-	
-	public static String inputFolder = "infographic_plane"; //this should also be the name of the infographic
-	public static final int nbTimesOutExtraParts = 5;
+	public static final int nbTimesOutExtraParts = 3;
 	public static final int nbOfTimesMeasuredInMainPart = 5; 
 	
-//	public static final String inputFolder = "infographic_space"; //this should also be the name of the infographic
-//	public static final int nbTimesOutExtraParts = 5;
-//	public static final int nbOfTimesMeasuredInMainPart = 15; 
+	public static String inputFolder = "infographic_plane"; //this should also be the name of the infographic
 	
 	public static UUID partId = null; //no part shown -> null otherwise id is id of main part that owns the shown extra part
 	
@@ -59,7 +42,6 @@ public class Statics {
 	public static final int minCombinedValue = 100; //how much must the combination be to show an extra part
 	
 	public static final String DBName = "DynamicInfographicsTest2";
-	
 	public static final double alpha = 0.4; //gives weight to new measurements
 	
 	// DATA EXTRACTION

@@ -139,7 +139,7 @@ public class ControlPanel extends UnscalablePanel{
             public void actionPerformed(ActionEvent event) {
 
                 Statics.reading = false;
-                DatabaseManager.storeDataInDB();
+//                DatabaseManager.storeDataInDB();
     			setSessionInfoText("Session stopped");
                 gui.clearExtraParts();
             }
