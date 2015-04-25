@@ -43,7 +43,6 @@ public class BrainwaveListener implements ThinkGearListener {
 	
 	@Override
 	public void eSenseEvent(int attentionValue, int meditationValue) {
-		System.out.println("ESense");
 		ESenseData data = null;
 		if(attentionValue != 0 && meditationValue != 0){
 			data = new ESenseData(ConnectionStatus.CONNECTED, attentionValue, meditationValue);
@@ -77,7 +76,6 @@ public class BrainwaveListener implements ThinkGearListener {
 
 	@Override
 	public void eegEvent(int delta, int theta, int lowAlpha, int highAlpha, int lowBeta, int highBeta, int lowGamma, int highGamma) {
-		System.out.println("EEG");
 		ESenseData eSenseData = queue.poll();
 		SensorData data = new SensorData(eSenseData.getStatus(), eSenseData.getAttentionValue(), eSenseData.getMeditationValue(), 
 										 delta, theta, lowAlpha, highAlpha, lowBeta, highBeta, lowGamma, highGamma);

@@ -207,11 +207,13 @@ public class GraphPanel extends UnscalablePanel implements FadeOutCallback{
 	
 	
 	private void highlight(LeafMainPart mainPart, boolean fadeIn, boolean fadeOut) {
-		if(fadeIn){
-			highLightMainPart(mainPart.getTopLeftCornerX(), mainPart.getTopLeftCornerY(), mainPart.getImageWidth(), mainPart.getImageHeight());
-		}
-		else if(fadeOut){
-			withdrawHighlight();
+		if(Statics.highlighting){
+			if(fadeIn){
+				highLightMainPart(mainPart.getTopLeftCornerX(), mainPart.getTopLeftCornerY(), mainPart.getImageWidth(), mainPart.getImageHeight());
+			}
+			else if(fadeOut){
+				withdrawHighlight();
+			}
 		}
 		
 	}

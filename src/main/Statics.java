@@ -13,6 +13,7 @@ public class Statics {
 	public static final boolean extractData = false;
 
 	public static final boolean interactive = true; //If set to true -> interactive infographic (otherwise dynamic infographic)
+	public static final boolean highlighting = false; //If set to true -> main parts are highlighted when there extra part is shown
 	
 	public static boolean reading = false; //true if someone is reading the infographic
 	public static String SID = "not_reading"; //unique SID identifying the current session
@@ -57,7 +58,7 @@ public class Statics {
 //	public static final PolicyType policy = PolicyType.COMBINED;
 	public static final int minCombinedValue = 100; //how much must the combination be to show an extra part
 	
-	public static final String DBName = "test";
+	public static final String DBName = "DynamicInfographicsTest2";
 	
 	public static final double alpha = 0.4; //gives weight to new measurements
 	
