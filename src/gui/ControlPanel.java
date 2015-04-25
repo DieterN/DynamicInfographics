@@ -10,18 +10,25 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.UUID;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import main.Statics;
 import mongodb.DatabaseManager;
+import analyzation.InfographicController;
+import analyzation.PolicyType;
 import brainwave.ConnectionStatus;
 
 public class ControlPanel extends UnscalablePanel{
@@ -29,8 +36,11 @@ public class ControlPanel extends UnscalablePanel{
 	private static final long serialVersionUID = 1L;	
 	
 	private JTextPane connectionStatusText;
-	private JTextPane chooseInfographic;
 	private JTextPane session_info;
+	private JLabel chooseInfographic;
+	private JLabel choosePolicy;
+	private JLabel currentPolicy;
+	private JLabel setPolicyThreshold;
 	private ConnectionStatus status;
 	private GUIController gui;
 	
@@ -38,7 +48,10 @@ public class ControlPanel extends UnscalablePanel{
 		this.gui = gui;
 		this.connectionStatusText = new JTextPane();
 		this.session_info = new JTextPane();
-		this.chooseInfographic = new JTextPane();
+		this.chooseInfographic = new JLabel();
+		this.choosePolicy = new JLabel();
+		this.currentPolicy = new JLabel();
+		this.setPolicyThreshold = new JLabel();
 		this.status = ConnectionStatus.NOT_CONNECTED;
 		initializeControlPanel();
 	}
@@ -52,6 +65,8 @@ public class ControlPanel extends UnscalablePanel{
 		JButton start = makeStartButton(name);
         JButton stop  = makeStopButton();
         List<JButton> infographicList  = makeInfographicButtons();
+        List<JButton> policyList  = makePolicyButtons();
+        JSlider policyThresholdSlider = makePolicyThresholdSlider();
         
         setConnectionStatusText(ConnectionStatus.NOT_CONNECTED,0,0);
         connectionStatusText.setEditable(false);
@@ -60,7 +75,9 @@ public class ControlPanel extends UnscalablePanel{
         session_info.setEditable(false);
         
         chooseInfographic.setText("Choose infographic:");
-        chooseInfographic.setEditable(false);
+        choosePolicy.setText("Choose policy:");
+        updateCurrentPolicyText();
+        setPolicyThreshold.setText("Set Policy Threshold:");
         
 		add(Box.createRigidArea(new Dimension(0,10)));
 		add(start);
@@ -77,9 +94,22 @@ public class ControlPanel extends UnscalablePanel{
 		add(Box.createRigidArea(new Dimension(0,20)));
 		for(JButton infographicButton: infographicList){
 			add(infographicButton);
-			add(Box.createRigidArea(new Dimension(0,20)));
+			add(Box.createRigidArea(new Dimension(0,10)));
 		}
-		add(Box.createRigidArea(new Dimension(0,600)));
+		add(Box.createRigidArea(new Dimension(0,40)));
+		add(currentPolicy);
+		add(Box.createRigidArea(new Dimension(0,10)));
+		add(choosePolicy);
+		add(Box.createRigidArea(new Dimension(0,20)));
+		for(JButton policyButton: policyList){
+			add(policyButton);
+			add(Box.createRigidArea(new Dimension(0,10)));
+		}
+		add(Box.createRigidArea(new Dimension(0,10)));
+		add(setPolicyThreshold);
+		add(Box.createRigidArea(new Dimension(0,10)));
+		add(policyThresholdSlider);
+		add(Box.createRigidArea(new Dimension(0,400)));
         
 		Rectangle rectangle = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
 		setSizeTo(new Dimension(200,(int) rectangle.getHeight()));
@@ -99,6 +129,9 @@ public class ControlPanel extends UnscalablePanel{
             	}
             	else if(name.getText().equals(Statics.default_text_name_field) || name.getText().equals("")){
         			JOptionPane.showMessageDialog(gui, "Please fill in your name first!", "Error", JOptionPane.ERROR_MESSAGE);
+        		}
+        		else if(Statics.policy == PolicyType.UNDEFINED){
+        			JOptionPane.showMessageDialog(gui, "Please choose a policy first!", "Error", JOptionPane.ERROR_MESSAGE);
         		}
         		else if(status != ConnectionStatus.CONNECTED){
         			JOptionPane.showMessageDialog(gui, "Please wait for the brainwave sensor status to be CONNECTED", "Error", JOptionPane.ERROR_MESSAGE);
@@ -139,6 +172,7 @@ public class ControlPanel extends UnscalablePanel{
             public void actionPerformed(ActionEvent event) {
 
                 Statics.reading = false;
+                Statics.policy = PolicyType.UNDEFINED;
 //                DatabaseManager.storeDataInDB();
     			setSessionInfoText("Session stopped");
                 gui.clearExtraParts();
@@ -172,10 +206,63 @@ public class ControlPanel extends UnscalablePanel{
 		}
         return infographicButtons;
 	}
+	
+	private List<JButton> makePolicyButtons() {
+		List<JButton> policyButtons = new ArrayList<JButton>();
+		
+		for(final String policyName : Statics.allowedPoliciesList){
+			UnscalableButton policyButton = new UnscalableButton(policyName);
+			policyButton.setSizeTo(new Dimension(150,25));
+	
+			policyButton.addActionListener(new ActionListener() {
+	            @Override
+	            public void actionPerformed(ActionEvent event) {
+	            	if(Statics.reading){
+	        			JOptionPane.showMessageDialog(gui, "Can't change policy while reading!", "Error", JOptionPane.ERROR_MESSAGE);
+	            	}
+	            	else{
+	            		Statics.policy = PolicyType.stringToPolicyType(policyName);
+	            		InfographicController.setPolicy();
+	            		updateCurrentPolicyText();
+	            	}
+	            }
+	        });
+			policyButtons.add(policyButton);
+		}
+        return policyButtons;
+	}
+	
+	private JSlider makePolicyThresholdSlider() {
+		final JSlider policyThresholdSlider = new JSlider(0, 100, Statics.minPolicyValue);
+		policyThresholdSlider.setMinorTickSpacing(5);
+		policyThresholdSlider.setMajorTickSpacing(10);
+		policyThresholdSlider.setPaintTicks(true);
+		policyThresholdSlider.setPaintLabels(true);
+		policyThresholdSlider.setSnapToTicks(true);
+
+		policyThresholdSlider.addChangeListener(new ChangeListener() {
+			
+			@Override
+			public void stateChanged(ChangeEvent e) {
+            	if(Statics.reading){
+        			JOptionPane.showMessageDialog(gui, "Can't change policy while reading!", "Error", JOptionPane.ERROR_MESSAGE);
+            	}
+            	else{
+            		Statics.minPolicyValue = policyThresholdSlider.getValue();
+            	}
+			}
+		});
+		return policyThresholdSlider;
+	}
 
 	public void setSessionInfoText(String info) {
         session_info.setText(info);
         session_info.revalidate();
+	}
+
+	public void updateCurrentPolicyText() {
+        currentPolicy.setText("Current Policy: " + PolicyType.toString(Statics.policy));
+        currentPolicy.revalidate();
 	}
 
 	public void setConnectionStatusText(ConnectionStatus status, int attention, int meditation) {

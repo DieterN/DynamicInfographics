@@ -15,15 +15,17 @@ public class Statics {
 	public static final boolean interactive = true; //If set to true -> interactive infographic (otherwise dynamic infographic)
 	public static final boolean highlighting = true; //If set to true -> main parts are highlighted when there extra part is shown
 	
-	public static boolean reading = false; //true if someone is reading the infographic
-	public static String SID = "not_reading"; //unique SID identifying the current session
 	public static final int frameOffsetX = 10; //thickness of the frame border, used to calculate mouse position (PositionX = MouseValue - frameOffsetX + Horscrollbar.value())
 	public static final int frameOffsetY = 40; //thickness of the frame border, used to calculate mouse position (PositionY = MouseValue - frameOffsetY + Verscrollbar.value())
 
+	public static boolean reading = false; //true if someone is reading the infographic
+	public static String SID = "not_reading"; //unique SID identifying the current session
+	
 	public static final String default_text_name_field = "Fill in your name";
 	public static String reader_name = "";	
 	
 	public static final List<String> infographicList = new ArrayList<String>(Arrays.asList("Plane", "Water"));
+	public static final List<String> allowedPoliciesList = new ArrayList<String>(Arrays.asList("Attention", "Meditation"));
 
 	public static final int nbTimesOutExtraParts = 3;
 	public static final int nbOfTimesMeasuredInMainPart = 5; 
@@ -32,14 +34,8 @@ public class Statics {
 	
 	public static UUID partId = null; //no part shown -> null otherwise id is id of main part that owns the shown extra part
 	
-	public static final PolicyType policy = PolicyType.ATTENTION;
-	public static final int minAttentionValue = 50; //how much must the attention be to show an extra part
-	
-//	public static final PolicyType policy = PolicyType.MEDITATION;
-	public static final int minMeditationValue = 50; //how much must the meditation be to show an extra part
-	
-//	public static final PolicyType policy = PolicyType.COMBINED;
-	public static final int minCombinedValue = 100; //how much must the combination be to show an extra part
+	public static PolicyType policy = PolicyType.UNDEFINED;
+	public static int minPolicyValue = 50; //percentage of max value of policy to be used as threshold in decision whether or not to show extra information
 	
 	public static final String DBName = "DynamicInfographicsTest2";
 	public static final double alpha = 0.4; //gives weight to new measurements

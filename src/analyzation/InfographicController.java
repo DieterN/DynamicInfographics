@@ -22,31 +22,37 @@ public class InfographicController implements TrackerCallback {
 
 	private GUIController gui;
 	private Infographic infographic;
-	private Policy policy;
+	private static Policy policy;
 	private Map<UUID,Integer> highMeasureMap = new HashMap<UUID,Integer>();
 
 	public InfographicController(GUIController gui, Infographic infographic) {
 		this.gui = gui;
 		this.infographic = infographic;
-		setRightPolicy();
+		setPolicy();
 	}
 	
-	private void setRightPolicy() {
+	public static void setPolicy() {
 		switch(Statics.policy){
 		case ATTENTION:
-			this.policy = new AttentionPolicy();
+			policy = new AttentionPolicy();
 			break;
 		case MEDITATION:
-			this.policy = new MeditationPolicy();
+			policy = new MeditationPolicy();
 			break;
 		case COMBINED:
-			this.policy = new CombinedPolicy();
+			policy = new CombinedPolicy();
+			break;
+		case UNDEFINED:
+			policy = null;
 			break;
 		}
 	}
 	
 	@Override
-	public void sendSensorDataPacket(SensorDataPacket packet) {		
+	public void sendSensorDataPacket(SensorDataPacket packet) {	
+		if(policy == null){
+			throw new IllegalStateException("Policy not yet defined!");
+		}
 		Point point = packet.getPosition();
 		UUID id = infographic.getIDofPartAt(point.x, point.y);
 		

@@ -7,6 +7,7 @@ public class CombinedPolicy extends Policy{
 
 	private double currentAttentionAverage = -1;
 	private double currentMeditationAverage = -1;
+	private int maxValue = 200;
 
 	@Override
 	public boolean showExtraPart(SensorDataPacket packet) {
@@ -20,6 +21,6 @@ public class CombinedPolicy extends Policy{
 			currentAttentionAverage = Statics.alpha*attention + (1-Statics.alpha)*currentAttentionAverage;
 			currentMeditationAverage = Statics.alpha*meditation + (1-Statics.alpha)*currentMeditationAverage;
 		}
-		return (currentAttentionAverage + currentMeditationAverage >= Statics.minCombinedValue);
+		return (currentAttentionAverage + currentMeditationAverage >= Statics.minPolicyValue*maxValue/100);
 	}
 }

@@ -6,6 +6,7 @@ import dataTypes.SensorDataPacket;
 public class AttentionPolicy extends Policy{
 
 	private double currentAverage = -1;
+	private int maxValue = 100;
 
 	@Override
 	public boolean showExtraPart(SensorDataPacket packet) {
@@ -16,6 +17,6 @@ public class AttentionPolicy extends Policy{
 		else{
 			currentAverage = Statics.alpha*attention + (1-Statics.alpha)*currentAverage;
 		}
-		return currentAverage >= Statics.minAttentionValue;
+		return currentAverage >= Statics.minPolicyValue*maxValue/100;
 	}
 }
