@@ -100,7 +100,6 @@ public class ButtonPanel extends UnscalablePanel implements MainPartVisitor{
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					if(Statics.reading){
-						graphPanel.resetHighlightRectangle();
 						graphPanel.showExtraPart(id);						
 					}
 					else{

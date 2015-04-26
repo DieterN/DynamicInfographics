@@ -2,6 +2,7 @@ package gui;
 
 import infographic.Infographic;
 import infographic.InfographicParser;
+import infographic.LeafMainPart;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -10,18 +11,20 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.UUID;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -79,6 +82,8 @@ public class ControlPanel extends UnscalablePanel{
         updateCurrentPolicyText();
         setPolicyThreshold.setText("Set Policy Threshold:");
         
+        JCheckBox highlightingCheckbox = createHighlightingCheckBox();
+        
 		add(Box.createRigidArea(new Dimension(0,10)));
 		add(start);
 		add(Box.createRigidArea(new Dimension(0,10)));
@@ -96,6 +101,8 @@ public class ControlPanel extends UnscalablePanel{
 			add(infographicButton);
 			add(Box.createRigidArea(new Dimension(0,10)));
 		}
+		add(Box.createRigidArea(new Dimension(0,20)));
+		add(highlightingCheckbox);
 		add(Box.createRigidArea(new Dimension(0,40)));
 		add(currentPolicy);
 		add(Box.createRigidArea(new Dimension(0,10)));
@@ -114,8 +121,8 @@ public class ControlPanel extends UnscalablePanel{
 		Rectangle rectangle = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
 		setSizeTo(new Dimension(200,(int) rectangle.getHeight()));
 	}
-	
-//	private int index = 1;
+
+	private int index = 1;
 	
 	private JButton makeStartButton(final JTextField name) {
 		UnscalableButton start = new UnscalableButton("Start session");
@@ -253,6 +260,25 @@ public class ControlPanel extends UnscalablePanel{
 			}
 		});
 		return policyThresholdSlider;
+	}
+	
+	private JCheckBox createHighlightingCheckBox() {
+		final JCheckBox highlightingCheckBox = new JCheckBox("Highlighting");
+		highlightingCheckBox.setSelected(Statics.highlighting);
+		highlightingCheckBox.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(!Statics.reading){
+					Statics.highlighting = highlightingCheckBox.isSelected();					
+				}
+				else{
+        			highlightingCheckBox.setSelected(Statics.highlighting);
+        			JOptionPane.showMessageDialog(gui, "Can't turn highlighting on/off while reading!", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
+		return highlightingCheckBox;
 	}
 
 	public void setSessionInfoText(String info) {

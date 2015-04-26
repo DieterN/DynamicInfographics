@@ -111,13 +111,6 @@ public class GraphPanel extends UnscalablePanel implements FadeOutCallback{
 
 		drawHighlightRectangle(g);
 		drawMouseOverRectangle();
-		
-
-//		Rectangle rectangle = new Rectangle(0, 0, 200, 200);
-//		Graphics2D g2d = (Graphics2D) g;
-//		if(highlightRectangle != null){
-//			g2d.draw(highlightRectangle);
-//		}
 	}
 	
 	/**
@@ -127,6 +120,7 @@ public class GraphPanel extends UnscalablePanel implements FadeOutCallback{
 	 */
 	public void showExtraPart(UUID id) {
 		if(Statics.partId != id){
+			resetHighlightRectangle();
 			if(Statics.partId != null){
 				if(id != null){
 					waitForFadeOut = true;
@@ -242,7 +236,6 @@ public class GraphPanel extends UnscalablePanel implements FadeOutCallback{
 	private void drawHighlightRectangle(Graphics g) {
 		if(highlightRectangle != null){
 			Graphics2D g2d = (Graphics2D) g;
-//			Graphics2D g2d = (Graphics2D) getGraphics();
 			g2d.setStroke(new BasicStroke(stroke));
 			g2d.draw(highlightRectangle);
 		}

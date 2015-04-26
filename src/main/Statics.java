@@ -13,7 +13,7 @@ public class Statics {
 	public static final boolean extractData = false;
 
 	public static final boolean interactive = true; //If set to true -> interactive infographic (otherwise dynamic infographic)
-	public static final boolean highlighting = true; //If set to true -> main parts are highlighted when there extra part is shown
+	public static boolean highlighting = true; //If set to true -> main parts are highlighted when there extra part is shown
 	
 	public static final int frameOffsetX = 10; //thickness of the frame border, used to calculate mouse position (PositionX = MouseValue - frameOffsetX + Horscrollbar.value())
 	public static final int frameOffsetY = 40; //thickness of the frame border, used to calculate mouse position (PositionY = MouseValue - frameOffsetY + Verscrollbar.value())
