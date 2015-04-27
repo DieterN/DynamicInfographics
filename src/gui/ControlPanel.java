@@ -177,12 +177,16 @@ public class ControlPanel extends UnscalablePanel{
         stop.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
-
-                Statics.reading = false;
-                Statics.policy = PolicyType.UNDEFINED;
-//                DatabaseManager.storeDataInDB();
-    			setSessionInfoText("Session stopped");
-                gui.clearExtraParts();
+            	if(Statics.reading){
+	                Statics.reading = false;
+	                Statics.policy = PolicyType.UNDEFINED;
+	                DatabaseManager.storeDataInDB();
+	    			setSessionInfoText("Session stopped");
+	                gui.clearExtraParts();
+            	}
+            	else{
+            		JOptionPane.showMessageDialog(gui, "No session started yet!", "Error", JOptionPane.ERROR_MESSAGE);
+            	}
             }
         });
         return stop;
@@ -252,7 +256,7 @@ public class ControlPanel extends UnscalablePanel{
 			@Override
 			public void stateChanged(ChangeEvent e) {
             	if(Statics.reading){
-        			JOptionPane.showMessageDialog(gui, "Can't change policy while reading!", "Error", JOptionPane.ERROR_MESSAGE);
+        			JOptionPane.showMessageDialog(gui, "Can't change policythreshold while reading!", "Error", JOptionPane.ERROR_MESSAGE);
             	}
             	else{
             		Statics.minPolicyValue = policyThresholdSlider.getValue();
