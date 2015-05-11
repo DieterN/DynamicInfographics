@@ -11,7 +11,7 @@ import dataTypes.ESenseData;
 import dataTypes.SensorData;
 
 /**
- * Gets called when the brainwave sensor made a measurement.s
+ * Gets called when the brainwave sensor made a measurement.
  * 
  * @author Dieter
  *
@@ -21,10 +21,18 @@ public class BrainwaveListener implements ThinkGearListener {
 	private List<BrainwaveListenerCallback> callbacks;
 	private ConcurrentLinkedQueue<ESenseData> queue = new ConcurrentLinkedQueue<ESenseData>();
 	
+	/**
+	 * Constructor for a brainwave listener.
+	 * 
+	 * @param callbacks: classes that should be notified when a measurement from the brainwave sensor has been received
+	 */
 	public BrainwaveListener(List<BrainwaveListenerCallback> callbacks) {
 		this.callbacks = callbacks;
 	}
 
+	/**
+	 * Call this method to start the brainwaveSensor
+	 */
 	public void startSensor() {
 		ThinkGearSocketChanged socket = new ThinkGearSocketChanged(this);
 		try {
