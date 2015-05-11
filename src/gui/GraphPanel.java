@@ -65,18 +65,27 @@ public class GraphPanel extends UnscalablePanel implements FadeOutCallback{
 		drawInfographic(infographic);
 	}
 
+	public void endSession(){
+		extraParts.removeAll();
+		buttonPanel.endSession();
+
+		resetHighlightRectangle();
+		removeMouseOverRectangle();
+		
+		restartGraphPanel();
+	}
+	
 	public void drawNewInfographic(Infographic infographic){
 		mainParts.removeAll();
 		extraParts.removeAll();
-		drawInfographic(infographic);
 		
+		drawInfographic(infographic);
 		this.infographic = infographic;
-		Statics.partId = null;
 		
 		buttonPanel.drawNewInfographic(infographic);
 		
-		highlightRectangle = null;
-		mouseOverRectangle = null;
+		resetHighlightRectangle();
+		removeMouseOverRectangle();
 		
 		mainParts.revalidate();
 		extraParts.revalidate();
@@ -134,6 +143,11 @@ public class GraphPanel extends UnscalablePanel implements FadeOutCallback{
 				continueShowExtraPart(id);
 			}
 		}
+	}
+	
+	private void restartGraphPanel(){
+		revalidate();
+		repaint();
 	}
 	
 	private void continueShowExtraPart(UUID id) {

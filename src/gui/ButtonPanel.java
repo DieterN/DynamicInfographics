@@ -126,8 +126,10 @@ public class ButtonPanel extends UnscalablePanel implements MainPartVisitor{
 	
 	public void setButtonVisible(UUID id){
 		visibleButtonList.add(id);
+		removeAll();
 		drawButtonPanel();
 		repaint();
+		revalidate();
 	}
 
 	@Override
@@ -142,6 +144,18 @@ public class ButtonPanel extends UnscalablePanel implements MainPartVisitor{
 	
 	public void drawNewInfographic(Infographic infographic) {
 		this.infographic = infographic;
+		visibleButtonList.clear();
+		if(Statics.interactive)
+			setAllButtonsVisible();
 		drawButtonPanel();
+	}
+
+	public void endSession() {
+		this.removeAll();
+		if(!Statics.interactive)
+			visibleButtonList.clear();
+		drawButtonPanel();
+		repaint();
+		revalidate();
 	}
 }

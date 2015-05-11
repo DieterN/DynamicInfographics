@@ -3,6 +3,12 @@ package analyzation;
 import main.Statics;
 import dataTypes.SensorDataPacket;
 
+/**
+ * Class responsible for calculating whether an extra part should be shown based on attention and meditation output of the sensor.
+ * 
+ * @author Dieter
+ *
+ */
 public class CombinedPolicy extends Policy{
 
 	private double currentAttentionAverage = -1;

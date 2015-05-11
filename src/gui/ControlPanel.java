@@ -179,10 +179,9 @@ public class ControlPanel extends UnscalablePanel{
             public void actionPerformed(ActionEvent event) {
             	if(Statics.reading){
 	                Statics.reading = false;
-	                Statics.policy = PolicyType.UNDEFINED;
 	                DatabaseManager.storeDataInDB();
+	                gui.endSession();
 	    			setSessionInfoText("Session stopped");
-	                gui.clearExtraParts();
             	}
             	else{
             		JOptionPane.showMessageDialog(gui, "No session started yet!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -233,7 +232,7 @@ public class ControlPanel extends UnscalablePanel{
 	            	}
 	            	else{
 	            		Statics.policy = PolicyType.stringToPolicyType(policyName);
-	            		InfographicController.setPolicy();
+	            		InfographicController.setPolicyToStaticsPolicy();
 	            		updateCurrentPolicyText();
 	            	}
 	            }

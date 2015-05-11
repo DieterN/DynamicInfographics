@@ -101,6 +101,11 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback{
 		tracker.addCallback(controller);
 	}
 	
+	public void endSession(){
+		Statics.partId = null;
+		graphPanel.endSession();
+	}
+	
 	/***********************
 	 *** GETTERS/SETTERS ***
 	 ***********************/

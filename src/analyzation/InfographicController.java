@@ -13,26 +13,56 @@ import dataTypes.SensorDataPacket;
 import tracking.TrackerCallback;
 
 /**
- * Receives all ESensePackets and analyses them using a certain policy.
+ * Responsible for controlling the infographic (main and extra parts).
+ * Uses policies to decide whether an extra part should be shown/hidden.
  * 
  * @author Dieter
  *
  */
 public class InfographicController implements TrackerCallback {
 
-	private GUIController gui;
-	private Infographic infographic;
-	private static Policy policy;
-	private Map<UUID,Integer> highMeasureMap = new HashMap<UUID,Integer>();
+	private GUIController gui; //gui that shows the infographic
+	private Infographic infographic; //infographic that this class controls
+	private static Policy policy; //policy used to determine whether or not to show/hide extra part
+	private Map<UUID,Integer> highMeasureMap = new HashMap<UUID,Integer>(); //map that contains nb of high measurements made for a specific extra part
 
+	/**
+	 * Constructor for an infographic Controller.
+	 * 
+	 * @param gui: gui that shows the infographic
+	 * @param infographic: infographic that this class controls
+	 */
 	public InfographicController(GUIController gui, Infographic infographic) {
 		this.gui = gui;
 		this.infographic = infographic;
-		setPolicy();
+		setPolicyToStaticsPolicy();
 	}
 	
-	public static void setPolicy() {
+	/**
+	 * Set the policy for deciding whether to show/hide an extra part to Statics.policy
+	 */
+	public static void setPolicyToStaticsPolicy() {
 		switch(Statics.policy){
+		case ATTENTION:
+			policy = new AttentionPolicy();
+			break;
+		case MEDITATION:
+			policy = new MeditationPolicy();
+			break;
+		case COMBINED:
+			policy = new CombinedPolicy();
+			break;
+		case UNDEFINED:
+			policy = null;
+			break;
+		}
+	}
+	
+	/**
+	 * Set the policy for deciding whether to show/hide an extra part to the given policy
+	 */
+	public static void setPolicy(PolicyType newPolicy) {
+		switch(newPolicy){
 		case ATTENTION:
 			policy = new AttentionPolicy();
 			break;
@@ -92,13 +122,5 @@ public class InfographicController implements TrackerCallback {
 			highMeasureMap.put(id, 0);
 		}
 		return highMeasureMap.get(id);
-	}
-
-	public GUIController getGui() {
-		return gui;
-	}
-
-	public void setGui(GUIController gui) {
-		this.gui = gui;
 	}
 }

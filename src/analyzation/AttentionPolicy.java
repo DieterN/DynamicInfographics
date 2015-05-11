@@ -3,6 +3,12 @@ package analyzation;
 import main.Statics;
 import dataTypes.SensorDataPacket;
 
+/**
+ * Class responsible for calculating whether an extra part should be shown based on attention output of the sensor.
+ * 
+ * @author Dieter
+ *
+ */
 public class AttentionPolicy extends Policy{
 
 	private double currentAverage = -1;
