@@ -63,7 +63,7 @@ public class DatabaseManager implements TrackerCallback{
 		}		
 		BasicDBObject session = new BasicDBObject("SID", Statics.SID)
 		.append("name", Statics.reader_name)
-		.append("infographic", Statics.inputFolder)
+		.append("infographic", Statics.currentInfographicFolder)
 		.append("measurements", measurements);
 		sessions.insert(session);
 		

@@ -205,8 +205,10 @@ public class ControlPanel extends UnscalablePanel{
 	        			JOptionPane.showMessageDialog(gui, "Can't change infographic while reading!", "Error", JOptionPane.ERROR_MESSAGE);
 	            	}
 	            	else{
-	            		Statics.inputFolder = "infographic_" + infographicName.toLowerCase();
-	        			InfographicParser parser = new InfographicParser(Statics.inputFolder);
+//	            		Statics.inputFolder = "infographic_" + infographicName.toLowerCase();
+	            		String inputFolder = "infographic_" + infographicName.toLowerCase();
+	            		Statics.currentInfographicFolder = inputFolder;
+	        			InfographicParser parser = new InfographicParser(inputFolder);
 	        			Infographic infographic = parser.parse();
 	        			gui.drawNewInfographic(infographic);
 	            	}

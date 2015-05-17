@@ -22,7 +22,9 @@ public class Main {
 	public static void main(String[] args){
 		if(Statics.showGUI){
 			//Extract infographic from files (can be list in the future maybe)
-			InfographicParser parser = new InfographicParser(Statics.inputFolder);
+    		String inputFolder = "infographic_" + Statics.infographicList.get(0).toLowerCase();
+    		Statics.currentInfographicFolder = inputFolder;
+			InfographicParser parser = new InfographicParser(inputFolder);
 			Infographic infographic = parser.parse();
 	
 			DatabaseManager manager = DatabaseManager.getInstance();

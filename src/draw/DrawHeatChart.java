@@ -27,6 +27,19 @@ public class DrawHeatChart {
 	
 	public DrawHeatChart(List<DBObject> sessions){
 		this.sessions = sessions;
+//		System.out.println("Sessions:");
+//		System.out.println(sessions.size());
+//		int i = 0;
+//		for(DBObject object: sessions){
+//			if(object.get("name").equals("Jared Joly") || object.get("name").equals("Nele Rober") || object.get("name").equals("Michiel Ruelens")){
+//				
+//			}
+//			else{
+//				i++;
+//				System.out.println(object);
+//				System.out.println(i);
+//			}
+//		}
 	}
 		
 	public void makeHeatCharts() {
