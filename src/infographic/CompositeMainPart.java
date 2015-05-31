@@ -6,18 +6,44 @@ import java.util.Map;
 import java.util.TreeSet;
 import java.util.UUID;
 
+/**
+ * Class that represents a composite main part.
+ * 
+ * A composite main parts consists of other main parts (composites and/or extras).
+ * 
+ * @author Dieter
+ *
+ */
 public class CompositeMainPart extends MainPart{
 
 	private TreeSet<MainPart> subParts = new TreeSet<MainPart>();
 	
-	public CompositeMainPart(BufferedImage bimg, int topLeftCornerX, int topLeftCornerY) {
+	/**
+	 * Constructor for a composite main part
+	 * 
+	 * @param bimg: image of the complete composite part
+	 * @param topLeftCornerX: topLeft 
+	 * @param topLeftCornerY
+	 */
+	public CompositeMainPart(BufferedImage bimg, int topLeftCornerX, int topLeftCornerY, TreeSet<MainPart> subParts) {
 		super(bimg, topLeftCornerX, topLeftCornerY);
+		this.subParts = subParts;
 	}
 
+	/**
+	 * Gets the sub parts.
+	 *
+	 * @return the sub parts
+	 */
 	public TreeSet<MainPart> getSubParts() {
 		return subParts;
 	}
 
+	/**
+	 * Sets the sub parts.
+	 *
+	 * @param subParts: the new sub parts
+	 */
 	public void setSubParts(TreeSet<MainPart> subParts) {
 		this.subParts = subParts;
 	}
@@ -60,12 +86,12 @@ public class CompositeMainPart extends MainPart{
 	}
 
 	@Override
-	public ExtraPart getChildOfPartAt(int width) {
+	public ExtraPart getChildOfPartAt(int x) {
 		ExtraPart part = null;
 		for(MainPart subPart: subParts){
 			int subPartTopLeftCornerX = subPart.getImageWidth();
-			if((subPartTopLeftCornerX <= width) && ((subPart.getImageWidth() + subPartTopLeftCornerX) > width)){
-				part = subPart.getChildOfPartAt(width);
+			if((subPartTopLeftCornerX <= x) && ((subPart.getImageWidth() + subPartTopLeftCornerX) > x)){
+				part = subPart.getChildOfPartAt(x);
 				break;
 			}
 		}

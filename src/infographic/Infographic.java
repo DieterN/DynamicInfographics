@@ -8,11 +8,24 @@ import java.util.Map;
 import java.util.TreeSet;
 import java.util.UUID;
 
+/**
+ * Class representing an infographic.
+ * An infographic contains mainParts and extra parts.
+ * The extra parts can be extracted out of the mainparts.
+ * 
+ * @author Dieter
+ *
+ */
 public class Infographic {
 
 	private List<MainPart> mainParts = new ArrayList<MainPart>();
 	private Map<UUID,MainPart> mappedMainParts = new HashMap<UUID,MainPart>();
 	
+	/**
+	 * Create a new infographic.
+	 * 
+	 * @param mainParts: mainParts that make up this infographic together
+	 */
 	public Infographic(List<MainPart> mainParts){
 		this.mainParts = mainParts;
 		for(MainPart part: mainParts){
@@ -20,26 +33,48 @@ public class Infographic {
 		}
 	}
 
+	/**
+	 * Gets the main parts.
+	 *
+	 * @return the main parts
+	 */
 	public List<MainPart> getMainParts() {
 		return mainParts;
 	}
 
-	public void setGraphicParts(List<MainPart> mainParts) {
+	/**
+	 * Sets the main parts.
+	 *
+	 * @param mainParts: the new main parts
+	 */
+	public void setMainParts(List<MainPart> mainParts) {
 		this.mainParts = mainParts;
 	}
-
-	public Map<UUID, MainPart> getMappedMainParts() {
-		return mappedMainParts;
-	}
 	
+	/**
+	 * Return the MainPart with the given ID.
+	 * 
+	 * @param id: ID of the requested mainPart
+	 * @return MainPart with the given ID.
+	 */
 	public MainPart getMainPartWithId(UUID id){
 		return mappedMainParts.get(id);
 	}
 
+	/**
+	 * Gets the infographic image type.
+	 *
+	 * @return the infographic image type
+	 */
 	public int getInfographicImageType(){
 		return mainParts.get(0).getType();
 	}
 	
+	/**
+	 * Get all LeafMainParts of this infographic.
+	 *
+	 * @return the LeafMainParts of this infographic.
+	 */
 	public TreeSet<LeafMainPart> getAllLeafs(){
 		TreeSet<LeafMainPart> result = new TreeSet<LeafMainPart>();
 		for(MainPart part: mappedMainParts.values()){
@@ -50,6 +85,11 @@ public class Infographic {
 		return result;
 	}
 	
+	/**
+	 * Gets the complete infographic image.
+	 *
+	 * @return the complete infographic image.
+	 */
 	public BufferedImage getImage() {
 		MainPart first = mainParts.get(0);
 		
@@ -73,6 +113,12 @@ public class Infographic {
 
 	}
 
+	/**
+	 * Gets the infographic height. This is the sum of the height of all MainParts.
+	 * For the last part though, the highest of the mainPart and the ExtraPart is returned.
+	 *
+	 * @return the height of this infographic
+	 */
 	public int getInfographicHeight() {
 		MainPart lastPart = mainParts.get(mainParts.size()-1);
 		int height = lastPart.getTopLeftCornerY();
@@ -86,6 +132,13 @@ public class Infographic {
 		return height;
 	}
 	
+	/**
+	 * Return the id of the MainPart at the given coordinates.
+	 * 
+	 * @param x: x-coordinate of the searched MainPart
+	 * @param y: y-coordinate of the searched MainPart
+	 * @return ID of the MainPart at the given coordinates. 
+	 */
 	public UUID getIDofPartAt(double x, double y){
 		UUID id = null;
 		for(MainPart part: mainParts){

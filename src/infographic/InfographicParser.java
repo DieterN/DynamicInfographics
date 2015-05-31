@@ -10,20 +10,28 @@ import java.util.TreeSet;
 import javax.imageio.ImageIO;
 
 /**
- * 
  * Class that parses the infographic from a directory and returns an infographic object
  * 
  * @author Dieter
- *
  */
 public class InfographicParser {
 
 	private String inputFolder;
 	
+	/**
+	 * Constructor for the parser.
+	 * 
+	 * @param inputFolder: folder from which to extract an infographic
+	 */
 	public InfographicParser(String inputFolder){
 		this.inputFolder = inputFolder;
 	}
 	
+	/**
+	 * Start parsing the infographic from the inputFolder.
+	 * 
+	 * @return the parsed Infographic
+	 */
 	public Infographic parse(){
 		List<MainPart> mainParts = new ArrayList<MainPart>();
 		
@@ -103,8 +111,7 @@ public class InfographicParser {
 			subParts.add(subPart);
 	    }
 		BufferedImage composedBimg = composeImagesIntoOneImageHorizontally(images);
-		CompositeMainPart compositePart = new CompositeMainPart(composedBimg, 0, partHeight);
-		compositePart.setSubParts(subParts);
+		CompositeMainPart compositePart = new CompositeMainPart(composedBimg, 0, partHeight, subParts);
 		return compositePart;
 	}
 
@@ -159,13 +166,5 @@ public class InfographicParser {
 			e.printStackTrace();
 		}
 		return bimg;
-	}
-	
-	public String getInputFolder() {
-		return inputFolder;
-	}
-
-	public void setInputFolder(String inputFolder) {
-		this.inputFolder = inputFolder;
 	}
 }
