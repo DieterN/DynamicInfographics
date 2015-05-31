@@ -12,10 +12,19 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 
+/**
+ * Class responsible for extracting data from the database.
+ * 
+ * @author Dieter
+ *
+ */
 public class DataExtractor {
 
 	private static DB db;
 	
+	/**
+	 * Create a new DataExtractor 
+	 */
 	public DataExtractor(){
 		connectToDatabase();
 	}
@@ -33,6 +42,11 @@ public class DataExtractor {
 	    }       
 	}
 	
+	/**
+	 * Call this to start extracting data from the database.
+	 * 
+	 * @return a list with all extracted data. Every DBObject contains data for one session
+	 */
 	public List<DBObject> extractData(){
 		if(db == null){
 			System.out.println("Database not initialized");

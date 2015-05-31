@@ -32,6 +32,11 @@ public class DatabaseManager implements TrackerCallback{
 		connectToDatabase();
 	}
 	
+	/**
+	 * Returns the current instance of this class or a new instance if there's currently none
+	 * 
+	 * @return
+	 */
 	public static synchronized DatabaseManager getInstance() {
         if (instance == null) {
             instance = new DatabaseManager();
@@ -52,6 +57,9 @@ public class DatabaseManager implements TrackerCallback{
 	    }       
 	}
 	
+	/**
+	 * Call this when all collected data should be stored in the database. 
+	 */
 	public static void storeDataInDB() {
 		DBCollection sessions = null;
 		DBObject options = BasicDBObjectBuilder.start().get();

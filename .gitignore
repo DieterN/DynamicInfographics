@@ -52,3 +52,4 @@ MaxCore.ser
 bin
 junit4.*
 heatcharts
+/rawheatcharts/
