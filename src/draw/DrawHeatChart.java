@@ -20,28 +20,29 @@ import org.tc33.jheatchart.HeatChart;
 
 import com.mongodb.DBObject;
 
+/**
+ * Class responsible for drawing heatcharts. This class requires a list of DBObjects (sessions) to work properly.
+ * 
+ * @author Dieter
+ *
+ */
 public class DrawHeatChart {
 	
 	private List<DBObject> sessions = new ArrayList<DBObject>();
-//	private String eSense; //this should be "attention" or "meditation" --> indicates the data from which you want to draw a heatchart
 	
+	/**
+	 * Constructor for a DrawHeatChart object, this requires a list of DBobjects
+	 * 
+	 * @param sessions: list of DBObject that contains one session per experiment
+	 */
 	public DrawHeatChart(List<DBObject> sessions){
 		this.sessions = sessions;
-//		System.out.println("Sessions:");
-//		System.out.println(sessions.size());
-//		int i = 0;
-//		for(DBObject object: sessions){
-//			if(object.get("name").equals("Jared Joly") || object.get("name").equals("Nele Rober") || object.get("name").equals("Michiel Ruelens")){
-//				
-//			}
-//			else{
-//				i++;
-//				System.out.println(object);
-//				System.out.println(i);
-//			}
-//		}
 	}
 		
+	/**
+	 * Call this method to draw heatcharts for all sessions in the sessions field.
+	 * The output of this method can be controlled by adjusting some parameters in the Statics class.
+	 */
 	public void makeHeatCharts() {
 		for(DBObject session: sessions){
 			Infographic infographic = extractInfographic(session);
@@ -104,7 +105,7 @@ public class DrawHeatChart {
 		return bimg;
 	}
 	
-	public static BufferedImage scaleImage(double scaleX, double scaleY, BufferedImage before){
+	private BufferedImage scaleImage(double scaleX, double scaleY, BufferedImage before){
 		int w = (int) (before.getWidth()*scaleX);
 		int h = (int) (before.getHeight()*scaleY);
 		BufferedImage after = new BufferedImage(w, h, before.getType());
@@ -149,7 +150,7 @@ public class DrawHeatChart {
 		return measuredValue;
 	}
 	
-	public static double[][] computeAveragedMatrix(double[][] data) {	
+	private double[][] computeAveragedMatrix(double[][] data) {	
 		double[][] averagedData = new double[data.length][data[0].length];
 //		System.out.println("Start");
 		for (int i = 0; i < data.length; i++) {
@@ -166,7 +167,7 @@ public class DrawHeatChart {
 		return averagedData;
 	}
 	
-	private static double optimalCellNeighboursAverage(double[][] data, int i, int j, int k, double sum, double count, int nbCounted){
+	private double optimalCellNeighboursAverage(double[][] data, int i, int j, int k, double sum, double count, int nbCounted){
 
         for (int x = i - k; x <= i + k; x += 2*k) {
             for (int y = j - k; y <= j + k; y++) {
@@ -202,7 +203,7 @@ public class DrawHeatChart {
         }
     }
 	
-	
+	//Method isn't used anymore, was suboptimal
 	private static double cellNeighborsAverage(double[][] data, int i, int j, int k){
 		double averaged = 0;
 		double sum = 0;

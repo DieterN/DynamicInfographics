@@ -4,6 +4,12 @@ import java.awt.Dimension;
 
 import javax.swing.JComponent;
 
+/**
+ * Represents components that can't be scaled automatically.
+ * 
+ * @author Dieter
+ *
+ */
 public class UnscalableComponent extends JComponent{
 
 	private static final long serialVersionUID = 1L;
@@ -19,7 +25,13 @@ public class UnscalableComponent extends JComponent{
             maximum.height);
         return preferred;
     }
-
+	
+	/**
+	 * Set size of this component to given dimension. 
+	 * The component will have the given size and won't be scaled.
+	 * 
+	 * @param dimension: dimension that indicates the new size of this component
+	 */
 	public void setSizeTo(Dimension dimension) {
 		this.setMaximumSize(dimension);
 		this.setMinimumSize(dimension);

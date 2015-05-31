@@ -20,6 +20,13 @@ import dataTypes.SensorData;
 import analyzation.InfographicController;
 import brainwave.BrainwaveListenerCallback;
 
+/**
+ * Topclass for the complete GUI. Contains the Graph- and ControlPanel
+ * and all of their children.
+ * 
+ * @author Dieter
+ *
+ */
 public class GUIController extends JFrame implements BrainwaveListenerCallback{
 	
 	private static final long serialVersionUID = 1L;
@@ -31,6 +38,12 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback{
 	private InfographicController controller;
 	private Tracker tracker; //tracker that monitors the position in this GUI
 	
+	/**
+	 * Constructor for the GUIController class.
+	 * 
+	 * @param infographic: infographic to be shown 
+	 * @param tracker: tracker that tracks the mouse in this gui
+	 */
 	public GUIController(Infographic infographic, Tracker tracker){
 		this.infographic = infographic;
 		this.basic = new JPanel();
@@ -68,6 +81,11 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback{
 		setVisible(true);	
 	}
 	
+	/**
+	 * Call when new sensor data has been received from the brainwave sensor.
+	 * The received that data will be sent to the tracker together with the
+	 * scroll bar values.
+	 */
 	public void sendSensorData(SensorData data){
 		JScrollBar vertical = scroll.getVerticalScrollBar();
 		JScrollBar horizontal = scroll.getHorizontalScrollBar();
@@ -78,22 +96,38 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback{
 		control.setConnectionStatusText(data.getStatus(), data.getAttentionValue(), data.getMeditationValue());
 	}
 
-	public UUID getPartID(double width, double height){
-		return infographic.getIDofPartAt(width, height);
+	/**
+	 * Get ID of extra part at the given x and y coordinates.
+	 * 
+	 * @param x: x-coordinate of extra part
+	 * @param y: y-coordinate of extra part
+	 * @return Extra part at given x and y coordinates.
+	 */
+	public UUID getPartID(double x, double y){
+		return infographic.getIDofPartAt(x, y);
 	}
 	
+	/**
+	 * Show extra part with given id.
+	 * 
+	 * @param id: id of extra part that should be shown
+	 */
 	public void showExtraPart(UUID id){
 		graphPanel.showExtraPart(id);
 	}
-
+	
+	/**
+	 * Fade out currently shown extra part 
+	 */
 	public void fadeOutExtraPart() {
 		graphPanel.fadeOutExtraPart();
 	}
 	
-	public void clearExtraParts(){
-		graphPanel.clearExtraParts();
-	}
-	
+	/**
+	 * Call this method when a new infographic has to be shown
+	 * 
+	 * @param infographic: new infographic to be shown
+	 */
 	public void drawNewInfographic(Infographic infographic){
 		graphPanel.drawNewInfographic(infographic);
 		tracker.removeCallback(controller);
@@ -101,6 +135,9 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback{
 		tracker.addCallback(controller);
 	}
 	
+	/**
+	 * Call when the current session has ended.
+	 */
 	public void endSession(){
 		Statics.partId = null;
 		graphPanel.endSession();

@@ -34,6 +34,14 @@ import analyzation.InfographicController;
 import analyzation.PolicyType;
 import brainwave.ConnectionStatus;
 
+/**
+ * Class that represents the controlpanel of the GUI.
+ * This class contains buttons/sliders/textfields that allow 
+ * to change the infographic, change the policy, to start/stop a session ...
+ * It also contains the fields that show the connection status of the sensor.
+ * 
+ * @author Dieter
+ */
 public class ControlPanel extends UnscalablePanel{
 
 	private static final long serialVersionUID = 1L;	
@@ -47,6 +55,12 @@ public class ControlPanel extends UnscalablePanel{
 	private ConnectionStatus status;
 	private GUIController gui;
 	
+	/**
+	 * Constructor for a control panel. It takes the GUI wherein it's drawn
+	 * as a parameter.
+	 * 
+	 * @param gui: gui wherin this controlpanel is drawn
+	 */
 	public ControlPanel(GUIController gui){
 		this.gui = gui;
 		this.connectionStatusText = new JTextPane();
@@ -286,16 +300,33 @@ public class ControlPanel extends UnscalablePanel{
 		return highlightingCheckBox;
 	}
 
+	/**
+	 * Call this message to change the session status text.
+	 * Normally this text will be: "Session started" or
+	 * "Session stopped"
+	 * 
+	 * @param info: text to be put as session info
+	 */
 	public void setSessionInfoText(String info) {
         session_info.setText(info);
         session_info.revalidate();
 	}
 
+	/**
+	 * Change the current used policy text to Statics.policy
+	 */
 	public void updateCurrentPolicyText() {
         currentPolicy.setText("Current Policy: " + PolicyType.toString(Statics.policy));
         currentPolicy.revalidate();
 	}
 
+	/**
+	 * Change the text that indicates the connection status of the brainwave sensor
+	 * 
+	 * @param status: Connectionstatus of the brainwave sensor
+	 * @param attention: last measured attention value
+	 * @param meditation: last measured meditation value
+	 */
 	public void setConnectionStatusText(ConnectionStatus status, int attention, int meditation) {
 		this.status = status;
 		

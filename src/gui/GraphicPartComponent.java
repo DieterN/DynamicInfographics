@@ -10,9 +10,7 @@ import java.awt.image.BufferedImage;
 import javax.swing.Timer;
 
 /**
- * To draw on the screen, it is first necessary to subclass a Component 
- * and override its paint() method. The paint() method is automatically called 
- * by the windowing system whenever component's area needs to be repainted.
+ * Component class for GraphicParts (Main- or Extraparts)
  */
 public class GraphicPartComponent extends UnscalableComponent{
 	
@@ -24,6 +22,15 @@ public class GraphicPartComponent extends UnscalableComponent{
 	private boolean fadeIn;
 	private boolean fadeOut;
 
+	/**
+	 * Component that contains a main- or extra graphic part.
+	 * 
+	 * @param bimg: image to be shown in the component
+	 * @param alpha: alpha value for the image
+	 * @param fadeIn: should the image be faded in?
+	 * @param fadeOut: should the image be faded out?
+	 * @param callback: callback that has to be called when fading out is finished
+	 */
 	public GraphicPartComponent(BufferedImage bimg, float alpha, boolean fadeIn, boolean fadeOut, final FadeOutCallback callback){
 		if(fadeOut && callback == null)
 			throw new IllegalArgumentException("FadeOutCallback needed when creating a fade out component!");
@@ -48,6 +55,7 @@ public class GraphicPartComponent extends UnscalableComponent{
 		});
 	}
 
+	@Override
 	public void paint(Graphics g) {
 		Graphics2D g2d = (Graphics2D)g;
 		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
@@ -60,6 +68,9 @@ public class GraphicPartComponent extends UnscalableComponent{
 		}
 	}
 
+	/**
+	 * Call this method to fade the extra part in by 0.05f
+	 */
 	public void fadeIn() {
 		alpha += 0.05f;
         if (alpha >1) {
@@ -69,6 +80,13 @@ public class GraphicPartComponent extends UnscalableComponent{
         repaint();		
 	}
 
+
+	/**
+	 * Call this method to fade the extra part out by 0.05f
+	 * If fading out is done (alpha = 0), the provided callback is called.
+	 * 
+	 * @param callback: called when fading out is done
+	 */
 	public void fadeOut(FadeOutCallback callback) {
 		alpha -= 0.05f;
         if (alpha < 0) {
@@ -79,18 +97,38 @@ public class GraphicPartComponent extends UnscalableComponent{
         repaint();		
 	}
 	  
+	/**
+	 * Gets the bimg.
+	 *
+	 * @return the bimg
+	 */
 	public BufferedImage getBimg() {
 		return bimg;
 	}
 
+	/**
+	 * Sets the bimg.
+	 *
+	 * @param bimg the new bimg
+	 */
 	public void setBimg(BufferedImage bimg) {
 		this.bimg = bimg;
 	}
 
+	/**
+	 * Gets the alpha.
+	 *
+	 * @return the alpha
+	 */
 	public float getAlpha() {
 		return alpha;
 	}
 
+	/**
+	 * Sets the alpha.
+	 *
+	 * @param alpha the new alpha
+	 */
 	public void setAlpha(float alpha) {
 		this.alpha = alpha;
 	}

@@ -73,11 +73,11 @@ public class CompositeMainPart extends MainPart{
 	}
 
 	@Override
-	public UUID getIdOfMainPartAt(double width) {
+	public UUID getIdOfMainPartAt(double x) {
 		UUID partId = null;
 		for(MainPart subPart: subParts){
 			int subPartTopLeftCornerX = subPart.getTopLeftCornerX();
-			if((subPartTopLeftCornerX <= width) && ((subPart.getImageWidth() + subPartTopLeftCornerX) > width)){
+			if((subPartTopLeftCornerX <= x) && ((subPart.getImageWidth() + subPartTopLeftCornerX) > x)){
 				partId = subPart.getId();
 				break;
 			}

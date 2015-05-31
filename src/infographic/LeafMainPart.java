@@ -41,9 +41,9 @@ public class LeafMainPart extends MainPart{
 	}
 	
 	@Override
-	public UUID getIdOfMainPartAt(double width) {
+	public UUID getIdOfMainPartAt(double x) {
 		UUID partID = null;
-		if(width <= super.getImageWidth())
+		if(x <= super.getImageWidth())
 			partID = this.getId();		
 			
 		return partID;

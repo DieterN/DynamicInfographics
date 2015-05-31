@@ -23,6 +23,14 @@ import javax.swing.SwingUtilities;
 
 import main.Statics;
 
+/**
+ * Class that represents the ButtonPanel in the GUI.
+ * This panel contains buttons that show up when an extra part has dissappeared.
+ * The extra part can be recalled by clicking the button.
+ * 
+ * @author Dieter
+ *
+ */
 public class ButtonPanel extends UnscalablePanel implements MainPartVisitor{
 
 	private static final long serialVersionUID = 1L;
@@ -33,6 +41,12 @@ public class ButtonPanel extends UnscalablePanel implements MainPartVisitor{
 	private Infographic infographic;
 	private GraphPanel graphPanel;
 
+	/**
+	 * Constructor for the buttonPanel class.
+	 * 
+	 * @param infographic: infographic whereof extra parts should be shown when a button is clicked
+	 * @param graphPanel: graphPanel wherin this buttonPanel is contained
+	 */
 	public ButtonPanel(Infographic infographic, GraphPanel graphPanel){
 		this.infographic = infographic;
 		this.graphPanel = graphPanel;
@@ -45,6 +59,9 @@ public class ButtonPanel extends UnscalablePanel implements MainPartVisitor{
 		}
 	}
 
+	/**
+	 * Call this method to draw the buttonPanel 
+	 */
 	public void drawButtonPanel(){
 		if(Statics.interactive){
 			setAllButtonsVisible();
@@ -124,6 +141,11 @@ public class ButtonPanel extends UnscalablePanel implements MainPartVisitor{
 		}
 	}
 	
+	/**
+	 * If a certain button has to become visible, call this method.
+	 * 
+	 * @param id: id of the extra part wherefor a button should become visible
+	 */
 	public void setButtonVisible(UUID id){
 		visibleButtonList.add(id);
 		removeAll();
@@ -132,16 +154,28 @@ public class ButtonPanel extends UnscalablePanel implements MainPartVisitor{
 		revalidate();
 	}
 
+	/**
+	 * Visitor pattern, needed to make distinction between LeafMainPart and CompositeMainPart
+	 */
 	@Override
 	public void visit(LeafMainPart part) {
 		createLeafButtonPanel(part);
 	}
 
+	/**
+	 * Visitor pattern, needed to make distinction between LeafMainPart and CompositeMainPart
+	 */
 	@Override
 	public void visit(CompositeMainPart part) {
 		createCompositeButtonPanel(part);
 	}
 	
+	/**
+	 * Call this method if a new infographic will be shown. 
+	 * The shown buttons will be cleared and the infographic field is changed.
+	 * 
+	 * @param infographic: new infographic that will be drawn 
+	 */
 	public void drawNewInfographic(Infographic infographic) {
 		this.infographic = infographic;
 		visibleButtonList.clear();
@@ -150,6 +184,9 @@ public class ButtonPanel extends UnscalablePanel implements MainPartVisitor{
 		drawButtonPanel();
 	}
 
+	/**
+	 * Clears all show buttons at the end of a session.
+	 */
 	public void endSession() {
 		this.removeAll();
 		if(!Statics.interactive)

@@ -57,7 +57,7 @@ public abstract class MainPart extends GraphicPart implements Comparable<MainPar
 	
 	public abstract ExtraPart getWidestChild();
 
-	public abstract UUID getIdOfMainPartAt(double width);
+	public abstract UUID getIdOfMainPartAt(double x);
 
 	public abstract Map<UUID, MainPart> getMapWithSelfAndChildren();
 	

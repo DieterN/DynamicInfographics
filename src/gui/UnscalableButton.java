@@ -4,11 +4,14 @@ import java.awt.Dimension;
 
 import javax.swing.JButton;
 
+/**
+ * Represents buttons that can't be scaled automatically.
+ * 
+ * @author Dieter
+ *
+ */
 public class UnscalableButton extends JButton{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	public UnscalableButton(String string) {
@@ -27,6 +30,12 @@ public class UnscalableButton extends JButton{
         return preferred;
     }
 
+	/**
+	 * Set size of this button to given dimension. 
+	 * The button will have the given size and won't be scaled.
+	 * 
+	 * @param dimension: dimension that indicates the new size of this button
+	 */
 	public void setSizeTo(Dimension dimension) {
 		this.setMaximumSize(dimension);
 		this.setMinimumSize(dimension);

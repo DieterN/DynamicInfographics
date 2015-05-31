@@ -4,6 +4,12 @@ import java.awt.Dimension;
 
 import javax.swing.JPanel;
 
+/**
+ * Represents panels that can't be scaled automatically.
+ * 
+ * @author Dieter
+ *
+ */
 public class UnscalablePanel extends JPanel{
 
 	private static final long serialVersionUID = 1L;
@@ -19,6 +25,13 @@ public class UnscalablePanel extends JPanel{
             maximum.height);
         return preferred;
     }
+	
+	/**
+	 * Set size of this panel to given dimension. 
+	 * The panel will have the given size and won't be scaled.
+	 * 
+	 * @param dimension: dimension that indicates the new size of this panel
+	 */
 
 	public void setSizeTo(Dimension dimension) {
 		this.setMaximumSize(dimension);

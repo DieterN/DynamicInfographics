@@ -24,6 +24,14 @@ import javax.swing.Timer;
 
 import main.Statics;
 
+/**
+ * Class representing the graphPanel of the GUI.
+ * The graphPanel contains the infographic, decomposed in main and extra parts.
+ * It also contains the buttonPanel
+ * 
+ * @author Dieter
+ *
+ */
 public class GraphPanel extends UnscalablePanel implements FadeOutCallback{
 	
 	private static final long serialVersionUID = 1L;
@@ -43,6 +51,11 @@ public class GraphPanel extends UnscalablePanel implements FadeOutCallback{
 
 	private Timer highlightTimer;
 	
+	/**
+	 * Constructor for the GraphPanel.
+	 * 
+	 * @param infographic: infographic to be shown in this graphPanel
+	 */
 	public GraphPanel(Infographic infographic) {
 		this.infographic = infographic; 
 
@@ -65,6 +78,10 @@ public class GraphPanel extends UnscalablePanel implements FadeOutCallback{
 		drawInfographic(infographic);
 	}
 
+	/**
+	 * Call this method when a sessions has ended.
+	 * All shown extra parts are removed and the buttonPanel is refreshed.
+	 */
 	public void endSession(){
 		extraParts.removeAll();
 		buttonPanel.endSession();
@@ -75,6 +92,13 @@ public class GraphPanel extends UnscalablePanel implements FadeOutCallback{
 		restartGraphPanel();
 	}
 	
+	/**
+	 * Call this method if a new infographic has to be drawn.
+	 * The previously shown infographic (main- and extraparts) will be deleted.
+	 * The buttonPanel will be cleared.
+	 * 
+	 * @param infographic: new infographic to be drawn
+	 */
 	public void drawNewInfographic(Infographic infographic){
 		mainParts.removeAll();
 		extraParts.removeAll();
@@ -123,9 +147,11 @@ public class GraphPanel extends UnscalablePanel implements FadeOutCallback{
 	}
 	
 	/**
-	 * Call when the extra frame at a given height has to be shown
+	 * Call when the extra part with the given id has to be shown.
+	 * Method will first fade out the currently shown extra part (if any)
+	 * and will then fade in the new one.
 	 * 
-	 * @param pointerHeight
+	 * @param id: id of the extra part that should be shown
 	 */
 	public void showExtraPart(UUID id) {
 		if(Statics.partId != id){
@@ -162,6 +188,10 @@ public class GraphPanel extends UnscalablePanel implements FadeOutCallback{
 		}	
 	}
 
+	/**
+	 * Call this method when the currently shown extra part has to be faded out.
+	 * If no extra part is shown, nothing happens.
+	 */
 	public void fadeOutExtraPart() {
 		UUID id = Statics.partId;
 		if(id == null){
@@ -171,6 +201,11 @@ public class GraphPanel extends UnscalablePanel implements FadeOutCallback{
 		drawExtraPartWithIDAndWithGivenFading(id, 1.0f, false, true, this);	
 	}
 
+	/**
+	 * Callback notifying that the fading out of an extra part has finished.
+	 * If a new extra part had to be shown, start fading it in now.
+	 * Do nothing otherwise.
+	 */
 	@Override
 	public void fadeOutFinished() {
 		Statics.partId = null;
@@ -226,6 +261,14 @@ public class GraphPanel extends UnscalablePanel implements FadeOutCallback{
 		
 	}
 
+	/**
+	 * Call this method when a mainPart has to be highlighted (= rectangle drawn around it).
+	 * 
+	 * @param leftTopCornerX: x-value of left top corner of main part that should be highlighted
+	 * @param leftTopCornerY: y-value of left top corner of main part that should be highlighted
+	 * @param width: width of main part that should be highlighted
+	 * @param height: height of main part that should be highlighted
+	 */
 	public void highLightMainPart(int leftTopCornerX, int leftTopCornerY, int width, int height){
 		withdrawHighlight();
 		highlightRectangle = new Rectangle(leftTopCornerX, leftTopCornerY, width, height);
@@ -255,25 +298,45 @@ public class GraphPanel extends UnscalablePanel implements FadeOutCallback{
 		}
 	}
 	
+	/**
+	 * Withdraw the current highlight
+	 */
 	public void withdrawHighlight(){
 		mainParts.repaint();
 		stroke = 0.5f;
 	}
 	
+	/**
+	 * Clear all currently shown extra parts.
+	 */
 	public void clearExtraParts(){
 		extraParts.removeAll();
 		extraParts.revalidate();
 		extraParts.repaint();
 	}
 
+	/**
+	 * Get all mainparts of the currently shown infographic.
+	 * 
+	 * @return mainparts of the currently shown infographic
+	 */
 	public Component getMainParts() {
 		return this.mainParts;
 	}
 	
+	/**
+	 * Reset the current highlight to null.
+	 * When paint method is called, the rectangle will dissappear.
+	 */
 	public void resetHighlightRectangle(){
 		this.highlightRectangle = null;
 	}
 
+	/**
+	 * Call when mouse hovers over a 'show extra part' button.
+	 * A red dotted rectangle will be drawn.
+	 * Before calling this, set the mouseOverRectangle first.
+	 */
 	public void drawMouseOverRectangle(){
 		if(mouseOverRectangle != null){
 			Graphics2D g2d = (Graphics2D) getGraphics();
@@ -284,13 +347,20 @@ public class GraphPanel extends UnscalablePanel implements FadeOutCallback{
 		}
 	}
 
+	/**
+	 * Call this method to set the MouseOver rectangle to the given rectangle
+	 * 
+	 * @param rectangle: new MouseOver rectangle
+	 */
 	public void setMouseOverRectangle(Rectangle rectangle){
 		this.mouseOverRectangle = rectangle;
 	}
 	
+	/**
+	 * Set the current mouseOverRectangle to null
+	 */
 	public void removeMouseOverRectangle(){
 		this.mouseOverRectangle = null;
 		repaint();
 	}
-	
 }
