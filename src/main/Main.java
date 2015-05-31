@@ -19,6 +19,9 @@ import brainwave.BrainwaveListenerCallback;
 
 public class Main {
 
+	/**
+	 * Main method that starts this program.
+	 */
 	public static void main(String[] args){
 		if(Statics.showGUI){
 			//Extract infographic from files (can be list in the future maybe)

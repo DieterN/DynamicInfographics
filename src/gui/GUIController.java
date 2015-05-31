@@ -109,6 +109,7 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback{
 	
 	/**
 	 * Show extra part with given id.
+	 * If the part with the given ID is already shown, do nothing.
 	 * 
 	 * @param id: id of extra part that should be shown
 	 */

@@ -14,7 +14,7 @@ import dataTypes.SensorDataPacket;
  */
 public abstract class Policy {
 		
-	private int outOfPartHeightCounter = 0;
+	private int outOfPartCounter = 0;
 	private UUID counterPartId = null;
 	
 	/**
@@ -31,7 +31,7 @@ public abstract class Policy {
 	 * for a sufficient amount of time. 
 	 * 
 	 * @param packet: contains information about the output of the brainwave sensor
-	 * @param indexOfPart: indexOfThePart the given packet is about
+	 * @param id: id of the part that the given packet is about
 	 * @return true if the currently shown extra part should be hidden, false otherwise
 	 */
 	public boolean hideExtraPart(SensorDataPacket packet, UUID id){
@@ -39,14 +39,14 @@ public abstract class Policy {
 		 
 		if(Statics.partId != null && Statics.partId != id){ //only act if something is shown and if we're not looking at the shown part anymore
 			if(counterPartId == Statics.partId){ //if the current counter fits the currently shown part
-				outOfPartHeightCounter++;
-				if(outOfPartHeightCounter >= Statics.nbTimesOutExtraParts){
+				outOfPartCounter++;
+				if(outOfPartCounter >= Statics.nbTimesOutExtraParts){
 					result = true;
-					outOfPartHeightCounter = 0;
+					outOfPartCounter = 0;
 				}
 			}
 			else{ //reset counter
-				outOfPartHeightCounter = 1;
+				outOfPartCounter = 1;
 				counterPartId = Statics.partId;
 			}
 		}

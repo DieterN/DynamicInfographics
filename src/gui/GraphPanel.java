@@ -151,6 +151,8 @@ public class GraphPanel extends UnscalablePanel implements FadeOutCallback{
 	 * Method will first fade out the currently shown extra part (if any)
 	 * and will then fade in the new one.
 	 * 
+	 * If the part with the given ID is already shown, do nothing.
+	 * 
 	 * @param id: id of the extra part that should be shown
 	 */
 	public void showExtraPart(UUID id) {
