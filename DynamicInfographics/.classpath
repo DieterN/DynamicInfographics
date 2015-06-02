@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/ConectorNeuroSky"/>
-	<classpathentry kind="lib" path="C:/Users/Dieter/Documents/K.U. Leuven/Master/2de master/Thesis/Jars/mongo-2.10.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Dieter/Documents/K.U. Leuven/Master/2de master/Thesis/Jars/jheatchart-0.6.jar"/>
-	<classpathentry kind="output" path="bin"/>
-</classpath>

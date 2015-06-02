@@ -2,7 +2,6 @@ package gui;
 
 import infographic.Infographic;
 import infographic.InfographicParser;
-import infographic.LeafMainPart;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -18,13 +17,11 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
-import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -135,8 +132,6 @@ public class ControlPanel extends UnscalablePanel{
 		Rectangle rectangle = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
 		setSizeTo(new Dimension(200,(int) rectangle.getHeight()));
 	}
-
-	private int index = 1;
 	
 	private JButton makeStartButton(final JTextField name) {
 		UnscalableButton start = new UnscalableButton("Start session");

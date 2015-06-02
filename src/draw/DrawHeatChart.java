@@ -203,29 +203,28 @@ public class DrawHeatChart {
         }
     }
 	
-	//Method isn't used anymore, was suboptimal
-	private static double cellNeighborsAverage(double[][] data, int i, int j, int k){
-		double averaged = 0;
-		double sum = 0;
-		double count = 0;
-        for (int x = Math.max(0, i - k); x <= Math.min(i + k, data.length); x++) {
-            for (int y = Math.max(0, j - k); y <= Math.min(j + k, data[i].length); y++) {
-                if (x >= 0 && y >= 0 && x < data.length && y < data[i].length) {
-                    if(x!=i || y!=j){
-                    	if(data[x][y] != 0){
-                    		int diff = Math.abs(x-i) + Math.abs(y-j);
-                    		sum += data[x][y]/diff;
-                    		count += 1.0/diff;
-                    	}
-                    }
-                }
-            }
-        }
-        if(count > 0)
-        	averaged = sum/count;
-//        else if(k < 15)
-        else
-        	averaged = cellNeighborsAverage(data, i, j, k+1);
-		return averaged;
-    }
+//	private static double cellNeighborsAverage(double[][] data, int i, int j, int k){
+//		double averaged = 0;
+//		double sum = 0;
+//		double count = 0;
+//        for (int x = Math.max(0, i - k); x <= Math.min(i + k, data.length); x++) {
+//            for (int y = Math.max(0, j - k); y <= Math.min(j + k, data[i].length); y++) {
+//                if (x >= 0 && y >= 0 && x < data.length && y < data[i].length) {
+//                    if(x!=i || y!=j){
+//                    	if(data[x][y] != 0){
+//                    		int diff = Math.abs(x-i) + Math.abs(y-j);
+//                    		sum += data[x][y]/diff;
+//                    		count += 1.0/diff;
+//                    	}
+//                    }
+//                }
+//            }
+//        }
+//        if(count > 0)
+//        	averaged = sum/count;
+////        else if(k < 15)
+//        else
+//        	averaged = cellNeighborsAverage(data, i, j, k+1);
+//		return averaged;
+//    }
 }
