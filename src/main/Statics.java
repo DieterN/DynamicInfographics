@@ -30,7 +30,7 @@ public class Statics {
 	public static final String default_text_name_field = "Fill in your name"; //Default text for the Name textfield
 	public static String reader_name = "";	//Name of the current reader
 	
-	public static final List<String> infographicList = new ArrayList<String>(Arrays.asList("Eyes")); //List of all infographics that can be shown
+	public static final List<String> infographicList = new ArrayList<String>(Arrays.asList("Eyes", "Drought", "Plane", "Water")); //List of all infographics that can be shown
 	public static String currentInfographicFolder = ""; //Folder containing the currently shown Infographic
 	
 	public static final List<String> allowedPoliciesList = new ArrayList<String>(Arrays.asList("Attention", "Meditation")); //List of policies that can be chosen
@@ -51,6 +51,8 @@ public class Statics {
 	
 	public static final boolean extractOnlyOneInfographic = false; //If true, only the measurements of the infographic with name 'extractInfographic' is extracted
 	public static final String extractInfographic ="infographic_drought"; //If 'extractOnlyOneInfographic' is true, only measurements of the infographic with this name will be extracted
+	
+	public static int average = 0;
 	
 	//List of eSenses that should be extracted from the DB
 	public static final List<String> eSensesToExtract = new ArrayList<String>(Arrays.asList("attention", "meditation", "delta", "theta","lowAlpha","highAlpha","lowBeta","highBeta","lowGamma","highGamma")); 

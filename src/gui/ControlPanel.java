@@ -52,6 +52,10 @@ public class ControlPanel extends UnscalablePanel{
 	private ConnectionStatus status;
 	private GUIController gui;
 	
+	private JLabel average;
+	private int total = 0;
+	private int nbOfMeasurements = 0;
+	
 	/**
 	 * Constructor for a control panel. It takes the GUI wherein it's drawn
 	 * as a parameter.
@@ -66,6 +70,7 @@ public class ControlPanel extends UnscalablePanel{
 		this.choosePolicy = new JLabel();
 		this.currentPolicy = new JLabel();
 		this.setPolicyThreshold = new JLabel();
+		this.average = new JLabel();		
 		this.status = ConnectionStatus.NOT_CONNECTED;
 		initializeControlPanel();
 	}
@@ -92,6 +97,8 @@ public class ControlPanel extends UnscalablePanel{
         choosePolicy.setText("Choose policy:");
         updateCurrentPolicyText();
         setPolicyThreshold.setText("Set Policy Threshold:");
+        
+        average.setText("Previous session avg.: 0 ");
         
         JCheckBox highlightingCheckbox = createHighlightingCheckBox();
         
@@ -127,7 +134,9 @@ public class ControlPanel extends UnscalablePanel{
 		add(setPolicyThreshold);
 		add(Box.createRigidArea(new Dimension(0,10)));
 		add(policyThresholdSlider);
-		add(Box.createRigidArea(new Dimension(0,400)));
+		add(Box.createRigidArea(new Dimension(0,10)));
+		add(average);
+		add(Box.createRigidArea(new Dimension(0,350)));
         
 		Rectangle rectangle = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
 		setSizeTo(new Dimension(200,(int) rectangle.getHeight()));
@@ -191,6 +200,7 @@ public class ControlPanel extends UnscalablePanel{
 	                DatabaseManager.storeDataInDB();
 	                gui.endSession();
 	    			setSessionInfoText("Session stopped");
+	    			setAverageText();
             	}
             	else{
             		JOptionPane.showMessageDialog(gui, "No session started yet!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -316,6 +326,22 @@ public class ControlPanel extends UnscalablePanel{
 	}
 
 	/**
+	 * Change the current used policy text to Statics.policy
+	 */
+	public void setAverageText() {
+		if(nbOfMeasurements == 0){
+			average.setText("Previous session avg.: 0");
+	        average.revalidate();
+		}
+		else{
+	        average.setText("Previous session avg.: " + total/nbOfMeasurements);
+	        average.revalidate();
+	        total = 0;
+	        nbOfMeasurements = 0;
+		}
+	}
+
+	/**
 	 * Change the text that indicates the connection status of the brainwave sensor
 	 * 
 	 * @param status: Connectionstatus of the brainwave sensor
@@ -333,5 +359,22 @@ public class ControlPanel extends UnscalablePanel{
 
         connectionStatusText.setText(text);
 		connectionStatusText.revalidate();
+	}
+
+	public void setTotal(int attention, int meditation) {
+		nbOfMeasurements++;
+		switch(Statics.policy){
+		case ATTENTION:
+			total += attention;
+			break;
+		case MEDITATION:
+			total += meditation;
+			break;
+		case COMBINED:
+			total += (attention + meditation)/2;
+			break;
+		default:
+			break;
+		}
 	}
 }

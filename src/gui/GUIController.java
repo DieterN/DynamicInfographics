@@ -94,6 +94,7 @@ public class GUIController extends JFrame implements BrainwaveListenerCallback{
 		}		
 		
 		control.setConnectionStatusText(data.getStatus(), data.getAttentionValue(), data.getMeditationValue());
+		control.setTotal(data.getAttentionValue(), data.getMeditationValue());
 	}
 
 	/**
